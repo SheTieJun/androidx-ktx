@@ -1,3 +1,5 @@
+## 相关文档说明
+[ActivityResultLauncher说明](ActivityResult.MD)
 
 ## 调用使用
 
@@ -11,7 +13,7 @@ pickContact {
 }
 ```
 
-2.选择多个文件，比如多个图片
+2.选择多个文件，比如图片
 
 ```kotlin
 selectMultipleFile {
@@ -60,7 +62,9 @@ takePicture {
     }
 }
 ```
-
-7. 其他... 
  
-   
+7. 其他... 
+
+
+
+
