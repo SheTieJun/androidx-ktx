@@ -1,5 +1,11 @@
+## 这是一个扩展AndroidX的lib
+[![](https://jitpack.io/v/SheTieJun/AndroidX-KTX.svg)](https://jitpack.io/#SheTieJun/AndroidX-KTX)
 
 ## 调用使用
+
+```
+implementation 'com.github.SheTieJun:AndroidX-KTX:Tag'
+```
 
 1.选择联系人
 
