@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/select_pic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="选择文件"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/select_file"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="选择多文件"
+        app:layout_constraintStart_toEndOf="@id/select_pic"
+        app:layout_constraintTop_toTopOf="@id/select_pic" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/perimission"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="请求权限"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/select_pic" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/pickContact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="联系人"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/perimission" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/takeVideo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="拍摄视频"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pickContact" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/takePic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="拍摄图片"
+        app:layout_constraintStart_toEndOf="@id/takeVideo"
+        app:layout_constraintTop_toTopOf="@id/takeVideo" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
