@@ -30,23 +30,29 @@
 
 ```kotlin
 pickContact {
-    Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+    if (it != null) {
+        Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+    }
 }
 ```
 
 2.选择多个文件，比如图片
 
 ```kotlin
-  selectMultipleFile {
-    Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+selectMultipleFile {
+    if (it != null) {
+        Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+    }
 }
 ```
 
 3.拍摄视频
 
  ```kotlin
- takeVideo {
-    Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+takeVideo {
+    if (it != null) {
+        Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+    }
 }
 ```
 
@@ -54,16 +60,19 @@ pickContact {
 
 ```kotlin
 startRequestPermission(permission = READ_EXTERNAL_STORAGE) {
-    Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+    if (it != null) {
+        Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+    }
 }
 
 ```
 
 5.选择文件
-
 ```kotlin
 selectFile {
-    Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+    if (it != null) {
+        Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+    }
 }
 ```
 
@@ -71,7 +80,6 @@ selectFile {
 
 ```kotlin
 takePicture {
-    Log.i(TAG, it.toString())
     if (it != null) {
         Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
     }
