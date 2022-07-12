@@ -1,11 +1,12 @@
 ## 这是一个扩展AndroidX的lib
 [![](https://jitpack.io/v/SheTieJun/AndroidX-KTX.svg)](https://jitpack.io/#SheTieJun/AndroidX-KTX)
 
-## 调用使用
 
 ```
 implementation 'com.github.SheTieJun:AndroidX-KTX:Tag'
 ```
+
+## ActivityResultLauncher封装使用
 
 1.选择联系人
 
@@ -17,7 +18,7 @@ pickContact {
 }
 ```
 
-2.选择多个文件，比如多个图片
+2.选择多个文件，比如图片
 
 ```kotlin
 selectMultipleFile {
@@ -67,6 +68,11 @@ takePicture {
 }
 ```
 
-7. 其他... 
- 
+7. 其他...
+
+## WindowInsetsControllerCompat封装调用
+
+[WindowInsetsControllerCompat使用](https://github.com/SheTieJun/BaseKit/wiki/WindowInsetsControllerCompat%E4%BD%BF%E7%94%A8)
+
+
    

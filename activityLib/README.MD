@@ -65,6 +65,7 @@ takePicture {
  
 7. 其他... 
 
+## WindowInsetsControllerCompat封装调用
 
-
+[WindowInsetsControllerCompat使用](https://github.com/SheTieJun/BaseKit/wiki/WindowInsetsControllerCompat%E4%BD%BF%E7%94%A8)
 
