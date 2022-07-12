@@ -23,3 +23,66 @@
 - CreateDocument: 提示用户选择一个文档，返回一个(file:/http:/content:)开头的Uri。
 - OpenMultipleDocuments: 提示用户选择文档（可以选择多个），分别返回它们的Uri，以List的形式。
 - OpenDocumentTree: 提示用户选择一个目录，并返回用户选择的作为一个Uri返回，应用程序可以完全管理返回目录中的文档。
+
+## 调用使用
+
+1.选择联系人
+
+```kotlin
+pickContact {
+    if (it != null) {
+        Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+    }
+}
+```
+
+2.选择多个文件，比如图片
+
+```kotlin
+selectMultipleFile {
+    if (it != null) {
+        Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+    }
+}
+```
+
+3.拍摄视频
+
+ ```kotlin
+takeVideo {
+    if (it != null) {
+        Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+    }
+}
+```
+
+4.申请权限
+
+```kotlin
+startRequestPermission(permission = READ_EXTERNAL_STORAGE) {
+    if (it != null) {
+        Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+    }
+}
+
+```
+
+5.选择文件
+```kotlin
+selectFile {
+    if (it != null) {
+        Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+    }
+}
+```
+
+6.拍摄图片
+
+```kotlin
+takePicture {
+    if (it != null) {
+        Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+    }
+}
+```
+ 

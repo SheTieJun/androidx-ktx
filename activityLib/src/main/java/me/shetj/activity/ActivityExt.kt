@@ -24,27 +24,36 @@
 package me.shetj.activity
 
 import android.app.Activity
+import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.view.Gravity
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+
 
 /**
- * 用来防止重新进入的时候多次展示 Splash
- * 是否是栈的底部
- */
-fun AppCompatActivity.isRoot(): Boolean {
-    if (!isTaskRoot) {
-        finish()
-        return true
+* 通过包名，让APP到前台，前提是APP在后台了，如果代码无效，可能是因为APP被判定在前台
+*/
+fun ActivityManager.moveToFrontApp(packageName: String) {
+    this.appTasks?.first {
+        it.taskInfo.baseIntent.component?.packageName == packageName
+    }?.apply {
+        moveToFront()
     }
-    return false
 }
 
+/**
+ * ABCD => B = ACDB
+ * ABCBD => B = ABCDB
+ * 只把上一界面提前第一个
+ */
+fun Context.moveToFront(activity: Activity) {
+    val intent: Intent = Intent(this, activity::class.java).apply {
+        flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+    }
+    startActivity(intent)
+}
 
 /**
  * @param isFinishOnTouchOutside 是否点击window 关闭activity
@@ -69,34 +78,6 @@ fun AppCompatActivity.addKeepScreenOn() {
  */
 fun AppCompatActivity.clearKeepScreenOn() {
     window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-}
-
-
-/**
- * 针对6.0动态请求权限问题,判断是否允许此权限
- *  可以使用 [AppCompatActivity.registerForActivityResult] 替代
- *  registerForActivityResult(ActivityResultContracts.RequestPermission())
- */
-fun Activity.hasPermission(
-    vararg permissions: String,
-    isRequest: Boolean = true
-): Boolean {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return true
-    val permissionsCheck: MutableList<String> = ArrayList()
-    for (permission in permissions) {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                permission
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            permissionsCheck.add(permission)
-        }
-    }
-    if (permissionsCheck.isEmpty()) return true
-    if (isRequest) {
-        ActivityCompat.requestPermissions(this, permissionsCheck.toTypedArray(), 100)
-    }
-    return false
 }
 
 

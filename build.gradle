@@ -3,7 +3,12 @@ plugins {
     id 'com.android.application' version '7.2.1' apply false
     id 'com.android.library' version '7.2.1' apply false
     id 'org.jetbrains.kotlin.android' version '1.6.21' apply false
+    id 'maven-publish'
+    id 'com.google.devtools.ksp' version '1.6.10-1.0.2'
 }
+
+ext.sdk_version = '0.0.3'
+ext.local_group_id = 'com.github.SheTieJun.AndroidX-KTX'
 
 task clean(type: Delete) {
     delete rootProject.buildDir
