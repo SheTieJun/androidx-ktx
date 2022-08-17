@@ -67,21 +67,21 @@ fun <I, O> ComponentActivity.register(
 
 
 fun ComponentActivity.startActivityResultLauncher(
-    @NonNull key: String = "startActivityResult" + mNextLocalRequestCode.getAndIncrement(),
+    @NonNull key: String = "startActivityResult",
     @NonNull callback: ActivityResultCallback<ActivityResult>
 ): ActivityResultLauncher<Intent> {
     return register(key, ActivityResultContracts.StartActivityForResult(), callback)
 }
 
 fun ComponentActivity.startRequestPermissionsLauncher(
-    @NonNull key: String = "startRequestMultiplePermissions" + mNextLocalRequestCode.getAndIncrement(),
+    @NonNull key: String = "startRequestMultiplePermissions",
     @NonNull callback: ActivityResultCallback<Map<String, Boolean>>
 ): ActivityResultLauncher<Array<String>> {
     return register(key, ActivityResultContracts.RequestMultiplePermissions(), callback)
 }
 
 fun ComponentActivity.startRequestPermissionLauncher(
-    @NonNull key: String = "startRequestPermission" + mNextLocalRequestCode.getAndIncrement(),
+    @NonNull key: String = "startRequestPermission",
     @NonNull callback: ActivityResultCallback<Boolean>
 ): ActivityResultLauncher<String> {
     return register(key, ActivityResultContracts.RequestPermission(), callback)
@@ -139,7 +139,7 @@ fun ComponentActivity.selectMultipleFile(type: String = "image/*", callback: Act
 /**
  * 搜索多类型的文件
  */
-fun ComponentActivity.searchFile(type: Array<String>, callback: ActivityResultCallback<Uri?>) {
+fun ComponentActivity.searchFile(type: Array<String> = arrayOf("image/*"), callback: ActivityResultCallback<Uri?>) {
     register("OpenDocument", ActivityResultContracts.OpenDocument(), callback).launch(type)
 }
 
@@ -178,10 +178,17 @@ fun ComponentActivity.takeVideo(callback: ActivityResultCallback<Uri?>) {
 
 
 /**
- * 选择练习人
+ * 选择联系人
  */
 fun ComponentActivity.pickContact(callback: ActivityResultCallback<Uri?>) {
     register("pickContact", ActivityResultContracts.PickContact(), callback).launch(null)
+}
+
+/**
+ * 剪切图片
+ */
+fun ComponentActivity.cropImage(imageResult: CropImage, callback: ActivityResultCallback<Uri?>){
+    register("cropImage",CropImageContract(),callback).launch(imageResult)
 }
 
 //endregion

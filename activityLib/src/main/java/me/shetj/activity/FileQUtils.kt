@@ -29,7 +29,6 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.FileUtils
-import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.webkit.MimeTypeMap
 import androidx.annotation.RequiresApi
@@ -136,11 +135,4 @@ object FileQUtils {
                     }
             } else null
         } else null
-}
-
-/**
- * 删除文件
- */
-fun Context.delFile(uri: Uri) {
-    DocumentsContract.deleteDocument(contentResolver, uri)
 }

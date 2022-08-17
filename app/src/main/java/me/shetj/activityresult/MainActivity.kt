@@ -5,9 +5,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.core.view.WindowCompat
+import me.shetj.activity.CropImage
+import me.shetj.activity.createFile
+import me.shetj.activity.cropImage
 import me.shetj.activity.pickContact
 import me.shetj.activity.selectFile
 import me.shetj.activity.selectMultipleFile
+import me.shetj.activity.setAppearance
 import me.shetj.activity.startRequestPermission
 import me.shetj.activity.takePicture
 import me.shetj.activity.takeVideo
@@ -19,6 +24,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        setAppearance(true)
+
         mainBinding.pickContact.setOnClickListener {
             pickContact{
                 Log.i(TAG,it.toString())
@@ -31,6 +40,15 @@ class MainActivity : AppCompatActivity() {
 
         mainBinding.selectFile.setOnClickListener {
             selectMultipleFile {
+                Log.i(TAG,it.toString())
+                if (it!= null){
+                    Toast.makeText(this,it.toString(),Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+        mainBinding.creatFile.setOnClickListener {
+            createFile("test.png"){
                 Log.i(TAG,it.toString())
                 if (it!= null){
                     Toast.makeText(this,it.toString(),Toast.LENGTH_LONG).show()
@@ -70,6 +88,12 @@ class MainActivity : AppCompatActivity() {
                 Log.i(TAG,it.toString())
                 if (it!= null){
                     Toast.makeText(this,it.toString(),Toast.LENGTH_LONG).show()
+                    cropImage(CropImage(it,16,9)){
+                        if (it!= null){
+                            Log.i(TAG,it.toString())
+                            Toast.makeText(this,it.toString(),Toast.LENGTH_LONG).show()
+                        }
+                    }
                 }
             }
         }

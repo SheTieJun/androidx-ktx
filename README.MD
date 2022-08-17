@@ -5,6 +5,11 @@
 ```
 implementation 'com.github.SheTieJun:AndroidX-KTX:Tag'
 ```
+或者单独获取
+```kotlin
+implementation 'com.github.SheTieJun.AndroidX-KTX:activityLib:Tag'
+implementation 'com.github.SheTieJun.AndroidX-KTX:livedatelib:Tag'
+```
 
 ## 1. ActivityResultLauncher封装使用
 
@@ -35,3 +40,6 @@ implementation 'com.github.SheTieJun:AndroidX-KTX:Tag'
 ### 0.0.3
 + LiveData扩展
 + ActivityExt扩展
+
+### 待定
++ CropImageContract 剪切图片

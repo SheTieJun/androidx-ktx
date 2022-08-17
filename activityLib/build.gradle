@@ -6,6 +6,8 @@ plugins {
 android {
     compileSdk 32
 
+    namespace = 'me.shetj.activity'
+
     defaultConfig {
         minSdk 21
         targetSdk 32
@@ -32,6 +34,12 @@ android {
     kotlinOptions {
         jvmTarget = '11'
     }
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+        }
+    }
 }
 
 dependencies {
@@ -41,5 +49,5 @@ dependencies {
     compileOnly 'androidx.appcompat:appcompat:1.4.2'
 }
 
-apply from : "uploadLocal.gradle"
-//apply from: "../spotless.gradle"
+//apply from : "uploadLocal.gradle"
+apply from: "../spotless.gradle"

@@ -68,6 +68,7 @@ startRequestPermission(permission = READ_EXTERNAL_STORAGE) {
 ```
 
 5.选择文件
+
 ```kotlin
 selectFile {
     if (it != null) {
@@ -85,4 +86,13 @@ takePicture {
     }
 }
 ```
- 
+
+7.剪切图片
+
+```kotlin
+cropImage(CropImageResult(it, 16, 9)) {
+    if (it != null) {
+        Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+    }
+}
+```
