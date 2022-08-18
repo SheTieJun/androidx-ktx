@@ -6,9 +6,12 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.core.view.WindowCompat
+import kotlinx.coroutines.launch
 import me.shetj.activity.CropImage
 import me.shetj.activity.createFile
+import me.shetj.activity.createSimDialog
 import me.shetj.activity.cropImage
+import me.shetj.activity.lifeScope
 import me.shetj.activity.pickContact
 import me.shetj.activity.selectFile
 import me.shetj.activity.selectMultipleFile
@@ -17,6 +20,8 @@ import me.shetj.activity.startRequestPermission
 import me.shetj.activity.takePicture
 import me.shetj.activity.takeVideo
 import me.shetj.activityresult.databinding.ActivityMainBinding
+import me.shetj.activityresult.databinding.LayoutDialogTestBinding
+import me.shetj.base.ktx.showToast
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
@@ -96,6 +101,16 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+
+        mainBinding.dialog.setOnClickListener {
+            createSimDialog<LayoutDialogTestBinding> (onViewCreated = {
+
+            }, setWindowSizeChange = { dialog,window ->
+                dialog.context.lifeScope?.launch {
+                    "已通过dialog的context获取到AppCompatActivity的lifeScope".showToast()
+                }
+            })
         }
     }
 }

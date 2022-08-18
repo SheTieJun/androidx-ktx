@@ -75,6 +75,16 @@
             app:layout_constraintStart_toEndOf="@id/takeVideo"
             app:layout_constraintTop_toTopOf="@id/takeVideo" />
 
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="弹窗"
+            app:layout_constraintStart_toEndOf="@id/takeVideo"
+            app:layout_constraintTop_toTopOf="@id/takeVideo" />
+
     </com.google.android.material.chip.ChipGroup>
 
 

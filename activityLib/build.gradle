@@ -49,5 +49,5 @@ dependencies {
     compileOnly 'androidx.appcompat:appcompat:1.4.2'
 }
 
-//apply from : "uploadLocal.gradle"
+apply from : "uploadLocal.gradle"
 apply from: "../spotless.gradle"

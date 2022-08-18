@@ -48,7 +48,7 @@ val Fragment.windowInsetsCompat: WindowInsetsCompat?
 fun FragmentActivity.hasNavigationBars(): Boolean {
     val windowInsetsCompat = windowInsetsCompat ?: return false
     return windowInsetsCompat.isVisible(Type.navigationBars()) &&
-        windowInsetsCompat.getInsets(Type.navigationBars()).bottom > 0
+            windowInsetsCompat.getInsets(Type.navigationBars()).bottom > 0
 }
 
 /**
@@ -113,11 +113,29 @@ fun Activity.showSystemUI() {
         ?.show(Type.systemBars())
 }
 
+
+@JvmOverloads
+fun Activity.immerse(
+    isBlack: Boolean = true,
+    @ColorInt color: Int = Color.TRANSPARENT
+) {
+    WindowCompat.setDecorFitsSystemWindows(window, false)
+    updateSystemUIColor(color)
+    ViewCompat.getWindowInsetsController(findViewById(android.R.id.content))?.let { controller ->
+        controller.isAppearanceLightStatusBars = isBlack
+        controller.isAppearanceLightNavigationBars = isBlack
+    }
+}
+
+
 /**
- * 不沉侵，只修改状态栏的颜色
+ *
+ * 只修改状态栏的颜色
+ * 沉侵: WindowCompat.setDecorFitsSystemWindows(window, false)
  */
+@JvmOverloads
 fun Activity.setAppearance(
-    isBlack: Boolean,
+    isBlack: Boolean = true,
     @ColorInt color: Int = Color.TRANSPARENT
 ) {
     updateSystemUIColor(color)
@@ -130,6 +148,7 @@ fun Activity.setAppearance(
 /**
  * 修改状态栏、底部的导航栏的颜色
  */
+@JvmOverloads
 fun Activity.updateSystemUIColor(@ColorInt color: Int = Color.TRANSPARENT) {
     window.statusBarColor = color
     window.navigationBarColor = color

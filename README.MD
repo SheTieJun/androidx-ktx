@@ -41,5 +41,8 @@ implementation 'com.github.SheTieJun.AndroidX-KTX:livedatelib:Tag'
 + LiveData扩展
 + ActivityExt扩展
 
-### 待定
-+ CropImageContract 剪切图片
+### 0.0.4
++ [CropImageContract](activityLib/src/main/java/me/shetj/activity/CropImageContract.kt) 剪切图片
++ 添加[Context扩展](activityLib/src/main/java/me/shetj/activity/ContextExt.kt)
+  + 主要添加`Context.lifeScope` 在`Dialog`等一些地方去获取`AppCompatActivity`的`lifecycleScope`
++ 添加[DialogKt](activityLib/src/main/java/me/shetj/activity/DialogKt.kt)，快速出击dialog
