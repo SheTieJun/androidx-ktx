@@ -14,11 +14,12 @@ implementation 'com.github.SheTieJun.AndroidX-KTX:livedatelib:Tag'
 ## 1. ActivityResultLauncher封装使用
 
 [ActivityResultLauncher使用](activityLib/ActivityResult.MD)
+- 基于'androidx.core:core-ktx:1.7.0'
 
 ## 2. WindowInsetsControllerCompat封装调用
 
 [WindowInsetsControllerCompat使用](https://github.com/SheTieJun/BaseKit/wiki/WindowInsetsControllerCompat%E4%BD%BF%E7%94%A8)
-
+- 基于'androidx.core:core-ktx:1.7.0'
 
 ## 3. LiveData扩展
 [LiveData扩展](liveDataLib/README.MD)
@@ -45,4 +46,7 @@ implementation 'com.github.SheTieJun.AndroidX-KTX:livedatelib:Tag'
 + [CropImageContract](activityLib/src/main/java/me/shetj/activity/CropImageContract.kt) 剪切图片
 + 添加[Context扩展](activityLib/src/main/java/me/shetj/activity/ContextExt.kt)
   + 主要添加`Context.lifeScope` 在`Dialog`等一些地方去获取`AppCompatActivity`的`lifecycleScope`
-+ 添加[DialogKt](activityLib/src/main/java/me/shetj/activity/DialogKt.kt)，快速出击dialog
++ 添加[DialogKt](activityLib/src/main/java/me/shetj/activity/DialogExt.kt)，快速出击dialog
+
+### xxx
++ 升级到'androidx.core:core-ktx:1.8.0'

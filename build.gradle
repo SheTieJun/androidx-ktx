@@ -2,11 +2,13 @@
 plugins {
     id 'com.android.application' version '7.2.1' apply false
     id 'com.android.library' version '7.2.1' apply false
-    id 'org.jetbrains.kotlin.android' version '1.6.21' apply false
+    id 'org.jetbrains.kotlin.android' version '1.7.10' apply false
     id 'maven-publish'
-    id 'com.google.devtools.ksp' version '1.6.10-1.0.2'
+    id 'com.google.devtools.ksp' version '1.7.10-1.0.6'
     id "com.diffplug.spotless" version "6.0.0"
 }
 
 ext.sdk_version = '0.0.3'
-ext.local_group_id = 'com.github.SheTieJun.AndroidX-KTX'
+ext.local_group_id = 'com.github.shetiejun'
+
+apply from : "https://gist.githubusercontent.com/SheTieJun/f4cb1bd33997c2b46d9e3df40b95a02e/raw/c7b65d18aabfeccc09c37e3b2e7964cdd1f8e856/subprojects.gradle"

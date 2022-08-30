@@ -43,10 +43,10 @@ android {
 }
 
 dependencies {
-    compileOnly "androidx.activity:activity-ktx:1.4.0"
-    compileOnly "androidx.fragment:fragment-ktx:1.4.0"
-    compileOnly 'androidx.core:core-ktx:1.7.0'
-    compileOnly 'androidx.appcompat:appcompat:1.4.2'
+    compileOnly "androidx.activity:activity-ktx:1.5.1"
+    compileOnly "androidx.fragment:fragment-ktx:1.5.2"
+    api 'androidx.core:core-ktx:1.8.0'
+    compileOnly 'androidx.appcompat:appcompat:1.5.0'
 }
 
 apply from : "uploadLocal.gradle"
