@@ -241,6 +241,67 @@ class DataStoreKit(
     }
 
 
+    /**
+     * Remove 移除单个key的值
+     *
+     * @param T
+     * @param key
+     * @return
+     */
+    suspend inline fun <reified T : Any> remove(@NonNull key: String): Boolean {
+        try {
+            dataStore.edit {
+                when (T::class) {
+                    Int::class -> {
+                        it.remove(intPreferencesKey(key))
+                    }
+                    Double::class -> {
+                        it.remove(doublePreferencesKey(key))
+                    }
+                    String::class -> {
+                        it.remove(stringPreferencesKey(key))
+                    }
+                    Boolean::class -> {
+                        it.remove(booleanPreferencesKey(key))
+                    }
+                    Float::class -> {
+                        it.remove(floatPreferencesKey(key))
+                    }
+                    Long::class -> {
+                        it.remove(longPreferencesKey(key))
+                    }
+                    Set::class -> {
+                        it.remove(stringSetPreferencesKey(key))
+                    }
+                    else -> {
+                        throw IllegalArgumentException(" Can't handle 'value' ")
+                    }
+                }
+            }
+            return true
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return false
+    }
+
+    /**
+     * Clear 清空
+     *
+     * @return
+     */
+    suspend inline fun clear(): Boolean {
+        try {
+            dataStore.edit {
+                it.clear()
+            }
+            return true
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return false
+    }
+
 }
 
 

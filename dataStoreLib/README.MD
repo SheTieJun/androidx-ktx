@@ -44,9 +44,23 @@ launch {
 }
 ```
 
-#### 1. 只获取一次
+#### 只获取一次
 ```kotlin
 launch {
     dataStoreKit.getFirst(key = "int", 1).toString()
+}
+```
+
+#### 移除单个key的值
+```kotlin
+launch {
+    dataStoreKit.remove<Int>(key = "int") 
+}
+```
+
+#### 清空
+```kotlin
+launch {
+    dataStoreKit.clear()
 }
 ```

@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         setAppearance(true)
 
         launch {
-            dataStoreKit.get(key = "int",1)
+            dataStoreKit.get(key = "int", -1)
                 .onEach {
                     it.toString().logI("dataStoreKit")
                 }
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
         }
         launch {
-            dataStoreKit.getFirst(key = "int",1).toString().logI("dataStoreKit:getSync")
+            dataStoreKit.getFirst(key = "int", -1).toString().logI("dataStoreKit:getSync")
         }
 
         mainBinding.pickContact.setOnClickListener {
@@ -147,7 +147,12 @@ class MainActivity : AppCompatActivity() {
 
         mainBinding.DataStore.setOnClickListener {
             launch {
-                dataStoreKit.save(key = "int",i++)
+                if (i > 3) {
+                    dataStoreKit.remove<Int>(key = "int")
+                    i = 0
+                } else {
+                    dataStoreKit.save(key = "int", i++)
+                }
             }
         }
     }
