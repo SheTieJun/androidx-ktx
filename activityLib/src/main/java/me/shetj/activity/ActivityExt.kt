@@ -37,9 +37,8 @@ import androidx.appcompat.app.AppCompatActivity
  */
 @JvmOverloads
 fun AppCompatActivity.cleanBackground(isFinishOnTouchOutside: Boolean = true) {
-    val mWindow = window
-    mWindow.setBackgroundDrawable(null)
-    mWindow.setGravity(Gravity.CENTER)
+    window?.setBackgroundDrawable(null)
+    window?.setGravity(Gravity.CENTER)
     setFinishOnTouchOutside(isFinishOnTouchOutside)
 }
 

@@ -65,7 +65,6 @@ fun <I, O> ComponentActivity.register(
     }
 }
 
-
 fun ComponentActivity.startActivityResultLauncher(
     @NonNull key: String = "startActivityResult",
     @NonNull callback: ActivityResultCallback<ActivityResult>
@@ -139,7 +138,10 @@ fun ComponentActivity.selectMultipleFile(type: String = "image/*", callback: Act
 /**
  * 搜索多类型的文件
  */
-fun ComponentActivity.searchFile(type: Array<String> = arrayOf("image/*"), callback: ActivityResultCallback<Uri?>) {
+fun ComponentActivity.searchFile(
+    type: Array<String> = arrayOf("image/*"),
+    callback: ActivityResultCallback<Uri?>
+) {
     register("OpenDocument", ActivityResultContracts.OpenDocument(), callback).launch(type)
 }
 
@@ -147,8 +149,12 @@ fun ComponentActivity.searchFile(type: Array<String> = arrayOf("image/*"), callb
 /**
  * 创建文件
  */
-fun ComponentActivity.createFile(fileName: String, callback: ActivityResultCallback<Uri?>) {
-    register("CreateDocument", ActivityResultContracts.CreateDocument(), callback).launch(fileName)
+fun ComponentActivity.createFile(
+    fileName: String,
+    mimeType: String = "image/*",
+    callback: ActivityResultCallback<Uri?>
+) {
+    register("CreateDocument", ActivityResultContracts.CreateDocument(""), callback).launch(fileName)
 }
 
 
@@ -187,8 +193,8 @@ fun ComponentActivity.pickContact(callback: ActivityResultCallback<Uri?>) {
 /**
  * 剪切图片
  */
-fun ComponentActivity.cropImage(imageResult: CropImage, callback: ActivityResultCallback<Uri?>){
-    register("cropImage",CropImageContract(),callback).launch(imageResult)
+fun ComponentActivity.cropImage(imageResult: CropImage, callback: ActivityResultCallback<Uri?>) {
+    register("cropImage", CropImageContract(), callback).launch(imageResult)
 }
 
 //endregion
@@ -290,7 +296,7 @@ fun Fragment.searchFile(type: Array<String>, callback: ActivityResultCallback<Ur
 }
 
 
-fun Fragment.selectFileByDir(dir:Uri?, callback: ActivityResultCallback<Uri?>) {
+fun Fragment.selectFileByDir(dir: Uri?, callback: ActivityResultCallback<Uri?>) {
     register("OpenDocumentTree", ActivityResultContracts.OpenDocumentTree(), callback)?.launch(dir)
 }
 

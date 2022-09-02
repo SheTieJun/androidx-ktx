@@ -15,9 +15,9 @@ import kotlinx.coroutines.CoroutineScope
  * 获取上下文的 lifecycleScope
  *
  * - Context:
- *   - 1.Service
- *   - 2.Application
- *   - 3.Activity
+ *      - 1.Service
+ *      - 2.Application
+ *      - 3.Activity
  *
  * 这里需要判断context 是不是  AppCompatActivity
  *

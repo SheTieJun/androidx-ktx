@@ -41,7 +41,7 @@ import java.util.Date
 
 
 /**
- * 创建一条图片地址uri,用于保存拍照后的照片
+ * Create image path uri
  * 兼容核心就是这里
  * @param context
  * @return 图片的uri
@@ -83,7 +83,12 @@ internal fun createImageUri(context: Context): Uri {
     ) ?: throw NullPointerException("create createImageUri fail")
 }
 
-
+/**
+ * Create video path uri
+ *
+ * @param context
+ * @return 图片的uri
+ */
 fun createVideoPathUri(context: Context): Uri {
     return when {
         Build.VERSION.SDK_INT >= VERSION_CODES.Q -> {

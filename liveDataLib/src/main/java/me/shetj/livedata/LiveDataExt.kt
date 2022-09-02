@@ -30,10 +30,10 @@ import androidx.lifecycle.MediatorLiveData
 import java.util.concurrent.atomic.AtomicBoolean
 
 /****************************************** LiveData ***************************************/
-/*** @Author stj
- * * @Date 2021/10/8-18:38
- * * @Email 375105540@qq.com
- * * 间隔固定时间内，取最后一个
+/**
+ * Throttle last :间隔固定时间内，取最后一个
+ *
+ * @param duration
  */
 fun <T> LiveData<T>.throttleLast(duration: Long = 1000L) = MediatorLiveData<T>().also { mld ->
     val source = this
@@ -53,10 +53,11 @@ fun <T> LiveData<T>.throttleLast(duration: Long = 1000L) = MediatorLiveData<T>()
     }
 }
 
-/*** @Author stj
- * * @Date 2021/10/8-18:38
- * * @Email 375105540@qq.com
- * * 间隔固定时间内，取第一个的值
+/**
+ * Throttle first 间隔固定时间内，取第一个的值
+ *
+ * @param T
+ * @param duration
  */
 fun <T> LiveData<T>.throttleFirst(duration: Long = 1000L) = MediatorLiveData<T>().also { mld ->
     val source = this
@@ -75,10 +76,11 @@ fun <T> LiveData<T>.throttleFirst(duration: Long = 1000L) = MediatorLiveData<T>(
     }
 }
 
-/*** @Author stj
- * * @Date 2021/10/8-18:38
- * * @Email 375105540@qq.com
- * * 一定时间内，最新的值
+/**
+ * Throttle latest : 一定时间内，最新的值
+ *
+ * @param T
+ * @param duration
  */
 fun <T> LiveData<T>.throttleLatest(duration: Long = 1000L) = MediatorLiveData<T>().also { mld ->
 
@@ -103,11 +105,11 @@ fun <T> LiveData<T>.throttleLatest(duration: Long = 1000L) = MediatorLiveData<T>
     }
 }
 
-/**  debounce
- * @Author stj
- * @Date 2021/10/8-18:38
- * @Email 375105540@qq.com
- * 2个值之间必须间隔，固定时间
+/**
+ * Debounce 2个值之间必须间隔，固定时间
+ *
+ * @param T
+ * @param duration
  */
 fun <T> LiveData<T>.debounce(duration: Long = 1000L) = MediatorLiveData<T>().also { mld ->
     val source = this

@@ -26,6 +26,7 @@ package me.shetj.activity
 import android.app.Activity
 import android.graphics.Color
 import android.os.Build
+import android.view.Window
 import androidx.annotation.ColorInt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -38,7 +39,7 @@ val Activity.windowInsets: WindowInsetsCompat?
     get() = ViewCompat.getRootWindowInsets(findViewById(android.R.id.content))
 
 val Activity.windowInsetsController: WindowInsetsControllerCompat
-    get() = WindowCompat.getInsetsController(window,findViewById(android.R.id.content))
+    get() = WindowCompat.getInsetsController(window, findViewById(android.R.id.content))
 
 val Fragment.windowInsetsCompat: WindowInsetsCompat?
     get() = kotlin.runCatching { requireActivity().windowInsets }
@@ -115,6 +116,12 @@ fun Activity.showSystemUI() {
 }
 
 
+/**
+ * Immerse
+ *
+ * @param isBlack 状态栏和导航栏文字颜色 黑色
+ * @param color 状态栏和导航栏 颜色
+ */
 @JvmOverloads
 fun Activity.immerse(
     isBlack: Boolean = true,
