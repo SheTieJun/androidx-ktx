@@ -46,7 +46,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
 
 
 fun Context.dataStoreKit(): DataStoreKit {
@@ -274,7 +273,7 @@ class DataStoreKit(
                         it.remove(stringSetPreferencesKey(key))
                     }
                     else -> {
-                        throw IllegalArgumentException(" Can't handle 'value' ")
+                        throw IllegalArgumentException(" Can't remove 'key' ")
                     }
                 }
             }

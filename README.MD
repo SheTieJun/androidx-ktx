@@ -31,10 +31,10 @@ implementation 'com.github.SheTieJun.AndroidX-KTX:livedatelib:Tag'
 [ActivityExt使用](activityLib/ActivityExt.MD) 
 
 ## 5. SoftKeyboardExt键盘相关
-[SoftKeyboardExt.kt](activityLib/src/main/java/me/shetj/activity/SoftKeyboardExt.kt)： 键盘隐藏显示/是否可见/高度变化
+[SoftKeyboardExt使用说明](activityLib/SoftKeyboardExt.MD)： 键盘隐藏显示/是否可见/高度变化
 
 ## 6. DataStoreKit代替SP保存和获取数据的封装使用
-[DataStoreKit.kt](dataStoreLib/src/main/java/me/shetj/datastore/DataStoreKit.kt): 代替SP保存和获取数据
+[DataStoreKit使用说明](dataStoreLib): 代替SP保存和获取数据
 
 
 ## UpdateLog
