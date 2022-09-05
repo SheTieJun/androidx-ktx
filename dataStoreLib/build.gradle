@@ -32,3 +32,6 @@ android {
 dependencies {
     api 'androidx.datastore:datastore-preferences:1.0.0'
 }
+
+apply from : "uploadLocal.gradle"
+apply from: "../spotless.gradle"

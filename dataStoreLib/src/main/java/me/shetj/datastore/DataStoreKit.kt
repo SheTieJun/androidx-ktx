@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019 SheTieJun
+ * Copyright (c) 2022 SheTieJun
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,8 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-
 package me.shetj.datastore
 
 import android.content.Context
@@ -47,7 +45,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-
 fun Context.dataStoreKit(): DataStoreKit {
     return DataStoreKit(this)
 }
@@ -60,7 +57,8 @@ class DataStoreKit(
 
     private val Context.myDataStore by preferencesDataStore(
         name = name,
-        produceMigrations = { context -> oldSp.map { context.getSPByName(it) } })
+        produceMigrations = { context -> oldSp.map { context.getSPByName(it) } }
+    )
 
     val dataStore: DataStore<Preferences> by lazy { context.myDataStore }
 
@@ -204,41 +202,41 @@ class DataStoreKit(
         return data as Flow<T?>
     }
 
-
     suspend inline fun <reified T : Any> getFirst(@NonNull key: String, @NonNull defaultValue: T): T {
         var resultValue = defaultValue
         dataStore.data.first {
-            resultValue = (when (T::class) {
-                Int::class -> {
-                    it[intPreferencesKey(key)]
-                }
-                Double::class -> {
-                    it[doublePreferencesKey(key)]
-                }
-                String::class -> {
-                    it[stringPreferencesKey(key)]
-                }
-                Boolean::class -> {
-                    it[booleanPreferencesKey(key)]
-                }
-                Float::class -> {
-                    it[floatPreferencesKey(key)]
-                }
-                Long::class -> {
-                    it[longPreferencesKey(key)]
-                }
-                Set::class -> {
-                    it[stringSetPreferencesKey(key)]
-                }
-                else -> {
-                    null
-                }
-            } ?: defaultValue) as T
+            resultValue = (
+                when (T::class) {
+                    Int::class -> {
+                        it[intPreferencesKey(key)]
+                    }
+                    Double::class -> {
+                        it[doublePreferencesKey(key)]
+                    }
+                    String::class -> {
+                        it[stringPreferencesKey(key)]
+                    }
+                    Boolean::class -> {
+                        it[booleanPreferencesKey(key)]
+                    }
+                    Float::class -> {
+                        it[floatPreferencesKey(key)]
+                    }
+                    Long::class -> {
+                        it[longPreferencesKey(key)]
+                    }
+                    Set::class -> {
+                        it[stringSetPreferencesKey(key)]
+                    }
+                    else -> {
+                        null
+                    }
+                } ?: defaultValue
+                ) as T
             true
         }
         return resultValue
     }
-
 
     /**
      * Remove 移除单个key的值
@@ -300,9 +298,7 @@ class DataStoreKit(
         }
         return false
     }
-
 }
-
 
 /**
  * Get SharedPreferencesMigration by name
