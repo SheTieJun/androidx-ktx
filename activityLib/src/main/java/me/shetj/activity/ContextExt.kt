@@ -5,8 +5,7 @@ import android.app.ActivityManager
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.CoroutineScope
 
@@ -25,12 +24,12 @@ import kotlinx.coroutines.CoroutineScope
  */
 val Context.lifeScope: CoroutineScope?
     get() {
-        if (this is AppCompatActivity) {
+        if (this is ComponentActivity) {
             return this.lifecycleScope
         }
         var context = this
         while (context is ContextWrapper) {
-            if (context is AppCompatActivity) {
+            if (context is ComponentActivity) {
                 return context.lifecycleScope
             }
             context = context.baseContext

@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity() {
         mainBinding.dialog.setOnClickListener {
             createSimDialog<LayoutDialogTestBinding>(onViewCreated = {
 
-            }, setWindowSizeChange = { dialog, window ->
+            }, setWindowSizeChange = { dialog, _ ->
                 dialog.context.lifeScope?.launch {
                     "已通过dialog的context获取到AppCompatActivity的lifeScope".showToast()
                 }

@@ -1,6 +1,6 @@
 ## 这是一个扩展AndroidX的lib
 
-[![](https://jitpack.io/v/SheTieJun/AndroidX-KTX.svg)](https://jitpack.io/#SheTieJun/AndroidX-KTX)
+[![](https://jitpack.io/v/SheTieJun/androidx-ktx.svg)](https://jitpack.io/#SheTieJun/androidx-ktx)
 
 ```
 implementation 'com.github.SheTieJun:AndroidX-KTX:Tag'
@@ -9,9 +9,9 @@ implementation 'com.github.SheTieJun:AndroidX-KTX:Tag'
 或者单独获取
 
 ```kotlin
-implementation 'com.github.SheTieJun.AndroidX-KTX:activityLib:Tag'// tag >=0.0.1
-implementation 'com.github.SheTieJun.AndroidX-KTX:livedatelib:Tag' // tag >=0.0.3
-implementation 'com.github.SheTieJun.AndroidX-KTX:dataStoreLib:Tag' // tag >=0.0.5
+implementation 'com.github.SheTieJun.androidx-ktx:activityLib:Tag'// tag >=0.0.1
+implementation 'com.github.SheTieJun.androidx-ktx:livedatelib:Tag' // tag >=0.0.3
+implementation 'com.github.SheTieJun.androidx-ktx:dataStoreLib:Tag' // tag >=0.0.6
 ```
 
 ## 1. ActivityResultLauncher封装使用
@@ -72,3 +72,6 @@ implementation 'com.github.SheTieJun.AndroidX-KTX:dataStoreLib:Tag' // tag >=0.0
 + 添加[SoftKeyboardExt.kt](activityLib/src/main/java/me/shetj/activity/SoftKeyboardExt.kt)：键盘隐藏显示/是否可见/高度变化
 + 新增`datastore-preferences`工具类封装[DataStoreKit.kt](dataStoreLib/src/main/java/me/shetj/datastore/DataStoreKit.kt):
   DataStore代替SP保存和获取数据
+
+### 0.0.6
+- Fix dataStoreLib no publish maven
