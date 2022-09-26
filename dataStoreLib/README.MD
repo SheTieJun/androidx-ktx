@@ -64,3 +64,10 @@ launch {
     dataStoreKit.clear()
 }
 ```
+
+#### 阻塞调用【非常规调用】
+```kotlin
+dataStoreKit.clearBlock()
+dataStoreKit.getFirstBlock("int", -1)
+dataStoreKit.saveBlock("int",i++)
+```

@@ -3,7 +3,7 @@
 [![](https://jitpack.io/v/SheTieJun/androidx-ktx.svg)](https://jitpack.io/#SheTieJun/androidx-ktx)
 
 ```
-implementation 'com.github.SheTieJun:AndroidX-KTX:Tag'
+implementation 'com.github.SheTieJun:androidx-ktx:Tag'
 ```
 
 或者单独获取
@@ -11,7 +11,7 @@ implementation 'com.github.SheTieJun:AndroidX-KTX:Tag'
 ```kotlin
 implementation 'com.github.SheTieJun.androidx-ktx:activityLib:Tag'// tag >=0.0.1
 implementation 'com.github.SheTieJun.androidx-ktx:livedatelib:Tag' // tag >=0.0.3
-implementation 'com.github.SheTieJun.androidx-ktx:dataStoreLib:Tag' // tag >=0.0.6
+implementation 'com.github.SheTieJun.androidx-ktx:dataStoreLib:Tag' // tag >=0.0.7
 ```
 
 ## 1. ActivityResultLauncher封装使用
@@ -72,6 +72,10 @@ implementation 'com.github.SheTieJun.androidx-ktx:dataStoreLib:Tag' // tag >=0.0
 + 添加[SoftKeyboardExt.kt](activityLib/src/main/java/me/shetj/activity/SoftKeyboardExt.kt)：键盘隐藏显示/是否可见/高度变化
 + 新增`datastore-preferences`工具类封装[DataStoreKit.kt](dataStoreLib/src/main/java/me/shetj/datastore/DataStoreKit.kt):
   DataStore代替SP保存和获取数据
++ 这之后的版本就要编译版本是32了
 
-### 0.0.6
+### 0.0.7
 - Fix dataStoreLib no publish maven
+
+### 待定
++ `dataStoreLib`新增`getFirstBlock` &`saveBlock` &`clearBlcok`【非常规调用】
