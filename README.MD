@@ -9,7 +9,7 @@ implementation 'com.github.SheTieJun:androidx-ktx:Tag'
 或者单独获取
 
 ```kotlin
-implementation 'com.github.SheTieJun.androidx-ktx:activityLib:Tag'// tag >=0.0.1
+implementation 'com.github.SheTieJun.androidx-ktx:activityLib:Tag'// tag >=0.0.1 ,min 32 ,因为jetpack
 implementation 'com.github.SheTieJun.androidx-ktx:livedatelib:Tag' // tag >=0.0.3
 implementation 'com.github.SheTieJun.androidx-ktx:dataStoreLib:Tag' // tag >=0.0.7
 ```
@@ -72,10 +72,14 @@ implementation 'com.github.SheTieJun.androidx-ktx:dataStoreLib:Tag' // tag >=0.0
 + 添加[SoftKeyboardExt.kt](activityLib/src/main/java/me/shetj/activity/SoftKeyboardExt.kt)：键盘隐藏显示/是否可见/高度变化
 + 新增`datastore-preferences`工具类封装[DataStoreKit.kt](dataStoreLib/src/main/java/me/shetj/datastore/DataStoreKit.kt):
   DataStore代替SP保存和获取数据
-+ 这之后的版本就要编译版本是32了
++ 这之后的版本`minCompileSdk=32` 了
 
 ### 0.0.7
+
 - Fix dataStoreLib no publish maven
 
-### 待定
+### 0.0.8
+
 + `dataStoreLib`新增`getFirstBlock` &`saveBlock` &`clearBlcok`【非常规调用】
++ Fix `FileQUtils`低版本获取路径错误的问题
++ update `setAppearance` :只修改状态栏，不在修改导航栏的颜色

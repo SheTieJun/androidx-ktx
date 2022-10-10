@@ -124,30 +124,28 @@ fun Activity.showSystemUI() {
  */
 @JvmOverloads
 fun Activity.immerse(
-    isBlack: Boolean = true,
+    statusIsBlack: Boolean = true,
+    navigationIsBlack:Boolean= true,
     @ColorInt color: Int = Color.TRANSPARENT
 ) {
     WindowCompat.setDecorFitsSystemWindows(window, false)
     updateSystemUIColor(color)
     windowInsetsController.let { controller ->
-        controller.isAppearanceLightStatusBars = isBlack
-        controller.isAppearanceLightNavigationBars = isBlack
+        controller.isAppearanceLightStatusBars = statusIsBlack
+        controller.isAppearanceLightNavigationBars = navigationIsBlack
     }
 }
 
 
 /**
- * 不沉侵，只修改状态栏的颜色
+ * 只修改状态栏的颜色
  */
 fun Activity.setAppearance(
-    isBlack: Boolean,
+    statusIsBlack: Boolean,
     @ColorInt color: Int = Color.TRANSPARENT
 ) {
-    updateSystemUIColor(color)
-    windowInsetsController.let { controller ->
-        controller.isAppearanceLightStatusBars = isBlack
-        controller.isAppearanceLightNavigationBars = isBlack
-    }
+    window.statusBarColor = color
+    windowInsetsController.isAppearanceLightStatusBars = statusIsBlack
 }
 
 /**
