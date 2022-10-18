@@ -4,6 +4,10 @@ import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageAndVideo
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.VideoOnly
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import kotlinx.coroutines.flow.collect
@@ -17,6 +21,8 @@ import me.shetj.activity.hideSoftKeyboard
 import me.shetj.activity.isVisibleKeyBoard
 import me.shetj.activity.lifeScope
 import me.shetj.activity.pickContact
+import me.shetj.activity.pickMultipleVisualMedia
+import me.shetj.activity.pickVisualMedia
 import me.shetj.activity.selectFile
 import me.shetj.activity.selectMultipleFile
 import me.shetj.activity.setAppearance
@@ -142,6 +148,25 @@ class MainActivity : AppCompatActivity() {
                 hideSoftKeyboard()
             } else {
                 showSoftKeyboard()
+            }
+        }
+
+
+        mainBinding.pickVisualMedia.setOnClickListener {
+            pickVisualMedia(PickVisualMediaRequest(VideoOnly)){ uri ->
+                if (uri != null) {
+                    Log.i(TAG, uri.toString())
+                    Toast.makeText(this, uri.toString(), Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+        
+        mainBinding.pickMultiVisualMedia.setOnClickListener{
+            pickMultipleVisualMedia(PickVisualMediaRequest(ImageOnly)){ uri ->
+                if (uri != null) {
+                    Log.i(TAG, uri.toString())
+                    Toast.makeText(this, uri.toString(), Toast.LENGTH_LONG).show()
+                }
             }
         }
 

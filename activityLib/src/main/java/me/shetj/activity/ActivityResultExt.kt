@@ -26,13 +26,16 @@ package me.shetj.activity
 
 import android.content.Intent
 import android.net.Uri
+import android.text.InputType
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistry
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.VisualMediaType
 import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle.Event
@@ -197,6 +200,27 @@ fun ComponentActivity.cropImage(imageResult: CropImage, callback: ActivityResult
     register("cropImage", CropImageContract(), callback).launch(imageResult)
 }
 
+
+/**
+ * Pick visual media
+ *
+ * @param inputType [PickVisualMediaRequest]
+ */
+fun ComponentActivity.pickVisualMedia(inputType: PickVisualMediaRequest, callback: ActivityResultCallback<Uri?>) {
+    register("PickVisualMedia", ActivityResultContracts.PickVisualMedia(), callback)?.launch(inputType)
+}
+
+
+/**
+ * Pick visual media
+ *
+ * @param inputType [PickVisualMediaRequest]
+ */
+fun ComponentActivity.pickMultipleVisualMedia(inputType: PickVisualMediaRequest, callback: ActivityResultCallback<List<@JvmSuppressWildcards Uri>>) {
+    register("PickMultipleVisualMedia", ActivityResultContracts.PickMultipleVisualMedia(), callback)?.launch(inputType)
+}
+
+
 //endregion
 
 /********************************************Fragment 部分********************************************************/
@@ -342,6 +366,26 @@ fun Fragment.takeVideo(callback: ActivityResultCallback<Uri?>) {
  */
 fun Fragment.pickContact(callback: ActivityResultCallback<Uri?>) {
     register("pickContact", ActivityResultContracts.PickContact(), callback)?.launch(null)
+}
+
+
+/**
+ * Pick visual media
+ *
+ * @param inputType [PickVisualMediaRequest]
+ */
+fun Fragment.pickVisualMedia(inputType: PickVisualMediaRequest, callback: ActivityResultCallback<Uri?>) {
+    register("PickVisualMedia", ActivityResultContracts.PickVisualMedia(), callback)?.launch(inputType)
+}
+
+
+/**
+ * Pick visual media
+ *
+ * @param inputType [PickVisualMediaRequest]
+ */
+fun Fragment.pickMultipleVisualMedia(inputType: PickVisualMediaRequest, callback: ActivityResultCallback<List<@JvmSuppressWildcards Uri>>) {
+    register("PickMultipleVisualMedia", ActivityResultContracts.PickMultipleVisualMedia(), callback)?.launch(inputType)
 }
 
 //endregion

@@ -67,6 +67,22 @@
             app:layout_constraintTop_toBottomOf="@id/pickContact" />
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/pickVisualMedia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="选择媒体文件"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pickContact" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/pickMultiVisualMedia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="选择多个媒体文件"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pickContact" />
+
+        <com.google.android.material.chip.Chip
             android:id="@+id/takePic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

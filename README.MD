@@ -83,3 +83,7 @@ implementation 'com.github.SheTieJun.androidx-ktx:dataStoreLib:Tag' // tag >=0.0
 + `dataStoreLib`新增`getFirstBlock` &`saveBlock` &`clearBlcok`【非常规调用】
 + Fix `FileQUtils`低版本获取路径错误的问题
 + update `setAppearance` :只修改状态栏，不在修改导航栏的颜色
+
+### 待定
++ - 基于'androidx.core:core-ktx:1.9.0' ,`minCompileSdk=33`
+- `activityLib`新增`pickVisualMedia`&`pickMultipleVisualMedia`选择文件
