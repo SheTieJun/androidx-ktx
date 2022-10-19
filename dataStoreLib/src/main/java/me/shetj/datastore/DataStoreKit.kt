@@ -73,7 +73,7 @@ class DataStoreKit(
      * @return
      */
     @Suppress("UNCHECKED_CAST")
-    suspend inline fun <reified T : Any> save(@NonNull key: String, @NonNull value: T): Boolean {
+    suspend inline fun <reified T : Any> save(key: String, value: T): Boolean {
         try {
             dataStore.edit {
                 when (T::class) {
@@ -118,7 +118,7 @@ class DataStoreKit(
      * @return
      */
     @Suppress("UNCHECKED_CAST")
-    inline fun <reified T : Any> get(@NonNull key: String, @NonNull defaultValue: T): Flow<T> {
+    inline fun <reified T : Any> get(key: String, defaultValue: T): Flow<T> {
         val data = dataStore.data.catch {
             if (it is IOException) {
                 it.printStackTrace()
@@ -165,7 +165,7 @@ class DataStoreKit(
      * @return
      */
     @Suppress("UNCHECKED_CAST")
-    inline fun <reified T : Any> get(@NonNull key: String): Flow<T?> {
+    inline fun <reified T : Any> get(key: String): Flow<T?> {
         val data = dataStore.data.catch {
             if (it is IOException) {
                 it.printStackTrace()
@@ -204,7 +204,7 @@ class DataStoreKit(
         return data as Flow<T?>
     }
 
-    suspend inline fun <reified T : Any> getFirst(@NonNull key: String, @NonNull defaultValue: T): T {
+    suspend inline fun <reified T : Any> getFirst(key: String, defaultValue: T): T {
         var resultValue = defaultValue
         dataStore.data.first {
             resultValue = (
@@ -247,7 +247,7 @@ class DataStoreKit(
      * @param key
      * @return
      */
-    suspend inline fun <reified T : Any> remove(@NonNull key: String): Boolean {
+    suspend inline fun <reified T : Any> remove(key: String): Boolean {
         try {
             dataStore.edit {
                 when (T::class) {
@@ -323,7 +323,7 @@ class DataStoreKit(
      * @param defaultValue 默认值
      * @return
      */
-    inline fun <reified T : Any> getFirstBlock(@NonNull key: String, @NonNull defaultValue: T): T {
+    inline fun <reified T : Any> getFirstBlock(key: String, defaultValue: T): T {
         //通过阻塞获取
         return runBlocking(Dispatchers.IO) {
             var resultValue = defaultValue
@@ -372,7 +372,7 @@ class DataStoreKit(
      * @return
      */
     @Suppress("UNCHECKED_CAST")
-    inline fun <reified T : Any> saveBlock(@NonNull key: String, @NonNull value: T): Boolean {
+    inline fun <reified T : Any> saveBlock(key: String, value: T): Boolean {
         return runBlocking(Dispatchers.IO) {
             try {
                 dataStore.edit {

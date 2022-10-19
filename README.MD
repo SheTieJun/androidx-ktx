@@ -14,19 +14,17 @@ implementation 'com.github.SheTieJun.androidx-ktx:livedatelib:Tag' // tag >=0.0.
 implementation 'com.github.SheTieJun.androidx-ktx:dataStoreLib:Tag' // tag >=0.0.7
 ```
 
+- ~~基于'androidx.core:core-ktx:1.7.0'~~
+- ~~基于'androidx.core:core-ktx:1.8.0'~~ tag >=0.0.5
+- 基于'androidx.core:core-ktx:1.9.0' tag >=0.0.9
+
 ## 1. ActivityResultLauncher封装使用
 
 [ActivityResultLauncher使用](activityLib/ActivityResult.MD)
 
-- ~~基于'androidx.core:core-ktx:1.7.0'~~
-- 基于'androidx.core:core-ktx:1.8.0'
-
 ## 2. WindowInsetsControllerCompat封装调用
 
 [WindowInsetsControllerCompat使用](https://github.com/SheTieJun/BaseKit/wiki/WindowInsetsControllerCompat%E4%BD%BF%E7%94%A8)
-
-- ~~基于'androidx.core:core-ktx:1.7.0'~~
-- 基于'androidx.core:core-ktx:1.8.0'
 
 ## 3. LiveData扩展
 
@@ -80,8 +78,8 @@ implementation 'com.github.SheTieJun.androidx-ktx:dataStoreLib:Tag' // tag >=0.0
 + Fix `FileQUtils`低版本获取路径错误的问题
 + update `setAppearance` :只修改状态栏，不在修改导航栏的颜色
 
-### 待定
-+ - 基于'androidx.core:core-ktx:1.9.0' ,`minCompileSdk=33`
-- `activityLib`新增`pickVisualMedia`&`pickMultipleVisualMedia`选择媒体文件
-- update：`WinCompatExt.kt`:`immerse`: 支持只沉浸状态栏或者只沉浸导航栏 
-- Fix:`getFileAbsolutePath` :可能获取到`raw：`开头的路径的文件导致的崩溃问题
+### 0.0.9
++ 基于'androidx.core:core-ktx:1.9.0' ,`minCompileSdk=33`
++ `activityLib`新增`pickVisualMedia`&`pickMultipleVisualMedia`选择媒体文件
++ update：`WinCompatExt.kt`:`immerse`: 支持只沉浸状态栏或者只沉浸导航栏
++ Fix:`getFileAbsolutePath` :可能获取到`raw：`开头的路径的文件导致的崩溃问题

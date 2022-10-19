@@ -1,6 +1,7 @@
 package me.shetj.activityresult
 
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -42,7 +43,6 @@ import me.shetj.datastore.dataStoreKit
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
-
     private val dataStoreKit by lazy { dataStoreKit() }
     private var i = 0
 
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         launch {
             dataStoreKit.get(key = "int", -1)
                 .onEach {
-                    it.toString().logI("dataStoreKit:get")
+                    it.toString().logI("dataStoreKit:get:$it")
                 }
                 .collect()
 
