@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:background="@color/blackHintText"
     tools:context=".MainActivity">
 
 
@@ -88,8 +88,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:text="拍摄图片后剪切"
-            app:layout_constraintStart_toEndOf="@id/takeVideo"
-            app:layout_constraintTop_toTopOf="@id/takeVideo" />
+              
+              />
 
 
         <com.google.android.material.chip.Chip
@@ -98,9 +98,33 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:text="弹窗"
-            app:layout_constraintStart_toEndOf="@id/takeVideo"
-            app:layout_constraintTop_toTopOf="@id/takeVideo" />
+              
+              />
 
+        <com.google.android.material.chip.Chip
+            android:id="@+id/immerse1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="沉浸[只状态栏]"
+              />
+
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/immerse2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="沉浸[只导航栏]"
+            />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/immerse3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="沉浸[状态栏和导航栏]"
+            />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/softKeyBord"
@@ -108,8 +132,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:text="键盘"
-            app:layout_constraintStart_toEndOf="@id/takeVideo"
-            app:layout_constraintTop_toTopOf="@id/takeVideo" />
+              
+              />
 
 
         <com.google.android.material.chip.Chip
@@ -118,8 +142,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:text="DataStore"
-            app:layout_constraintStart_toEndOf="@id/takeVideo"
-            app:layout_constraintTop_toTopOf="@id/takeVideo" />
+              
+              />
 
     </com.google.android.material.chip.ChipGroup>
 

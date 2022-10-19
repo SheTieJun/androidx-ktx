@@ -74,10 +74,6 @@ implementation 'com.github.SheTieJun.androidx-ktx:dataStoreLib:Tag' // tag >=0.0
   DataStore代替SP保存和获取数据
 + 这之后的版本`minCompileSdk=32` 了
 
-### 0.0.7
-
-- Fix dataStoreLib no publish maven
-
 ### 0.0.8
 
 + `dataStoreLib`新增`getFirstBlock` &`saveBlock` &`clearBlcok`【非常规调用】
@@ -86,4 +82,6 @@ implementation 'com.github.SheTieJun.androidx-ktx:dataStoreLib:Tag' // tag >=0.0
 
 ### 待定
 + - 基于'androidx.core:core-ktx:1.9.0' ,`minCompileSdk=33`
-- `activityLib`新增`pickVisualMedia`&`pickMultipleVisualMedia`选择文件
+- `activityLib`新增`pickVisualMedia`&`pickMultipleVisualMedia`选择媒体文件
+- update：`WinCompatExt.kt`:`immerse`: 支持只沉浸状态栏或者只沉浸导航栏 
+- Fix:`getFileAbsolutePath` :可能获取到`raw：`开头的路径的文件导致的崩溃问题

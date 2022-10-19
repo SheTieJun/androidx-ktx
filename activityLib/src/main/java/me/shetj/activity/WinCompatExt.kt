@@ -26,7 +26,7 @@ package me.shetj.activity
 import android.app.Activity
 import android.graphics.Color
 import android.os.Build
-import android.view.Window
+import android.widget.FrameLayout
 import androidx.annotation.ColorInt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -117,22 +117,56 @@ fun Activity.showSystemUI() {
 
 
 /**
- * Immerse
+ * Immerse 沉浸。设置沉浸的方式
  *
- * @param isBlack 状态栏和导航栏文字颜色 黑色
- * @param color 状态栏和导航栏 颜色
+ * @param type Type.systemBars(),Type.statusBars(),Type.navigationBars()
+ * @param statusIsBlack 专栏文字 true 黑色,false 白色
+ * @param navigationIsBlack 导航栏按钮 true 黑色,false 白色
+ * @param color
  */
 @JvmOverloads
 fun Activity.immerse(
+    @Type.InsetsType type: Int = Type.systemBars(),
     statusIsBlack: Boolean = true,
-    navigationIsBlack:Boolean= true,
+    navigationIsBlack: Boolean = true,
     @ColorInt color: Int = Color.TRANSPARENT
 ) {
-    WindowCompat.setDecorFitsSystemWindows(window, false)
-    updateSystemUIColor(color)
-    windowInsetsController.let { controller ->
-        controller.isAppearanceLightStatusBars = statusIsBlack
-        controller.isAppearanceLightNavigationBars = navigationIsBlack
+
+    when (type) {
+        Type.systemBars() -> {
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+            updateSystemUIColor(color)
+            windowInsetsController.let { controller ->
+                controller.isAppearanceLightStatusBars = statusIsBlack
+                controller.isAppearanceLightNavigationBars = navigationIsBlack
+            }
+            findViewById<FrameLayout>(android.R.id.content).apply {
+                setPadding(0, 0, 0, 0)
+            }
+        }
+        Type.statusBars() -> {
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+            window.statusBarColor = color
+            windowInsetsController.isAppearanceLightStatusBars = statusIsBlack
+            findViewById<FrameLayout>(android.R.id.content).apply {
+                post {
+                    setPadding(0, 0, 0, getNavigationBarsHeight())
+                }
+            }
+        }
+        Type.navigationBars() -> {
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+            window.navigationBarColor = color
+            windowInsetsController.isAppearanceLightNavigationBars = navigationIsBlack
+            findViewById<FrameLayout>(android.R.id.content).apply {
+                post {
+                    setPadding(0, getStatusBarsHeight(), 0, 0)
+                }
+            }
+        }
+        else -> {
+            // no work
+        }
     }
 }
 

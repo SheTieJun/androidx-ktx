@@ -1,6 +1,7 @@
 package me.shetj.activityresult
 
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -10,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.VideoOnly
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat.Type
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -18,6 +20,7 @@ import me.shetj.activity.createFile
 import me.shetj.activity.createSimDialog
 import me.shetj.activity.cropImage
 import me.shetj.activity.hideSoftKeyboard
+import me.shetj.activity.immerse
 import me.shetj.activity.isVisibleKeyBoard
 import me.shetj.activity.lifeScope
 import me.shetj.activity.pickContact
@@ -47,10 +50,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
-
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        setAppearance(true)
-
+        immerse(Type.statusBars(),statusIsBlack = true, navigationIsBlack = true,Color.RED)
         launch {
             dataStoreKit.get(key = "int", -1)
                 .onEach {
@@ -190,6 +191,16 @@ class MainActivity : AppCompatActivity() {
                     dataStoreKit.save(key = "int", i++)
                 }
             }
+        }
+
+        mainBinding.immerse1.setOnClickListener {
+            immerse(type = Type.statusBars(), statusIsBlack = true, color = Color.RED)
+        }
+        mainBinding.immerse2.setOnClickListener {
+            immerse(type = Type.navigationBars(), navigationIsBlack = true,color = Color.RED)
+        }
+        mainBinding.immerse3.setOnClickListener {
+            immerse(type = Type.systemBars(), navigationIsBlack = true,color = Color.RED)
         }
     }
 }
