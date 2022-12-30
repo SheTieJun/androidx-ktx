@@ -41,7 +41,7 @@ val Activity.windowInsets: WindowInsetsCompat?
 val Activity.windowInsetsController: WindowInsetsControllerCompat
     get() = WindowCompat.getInsetsController(window, findViewById(android.R.id.content))
 
-val Fragment.windowInsetsCompat: WindowInsetsCompat?
+val Fragment.windowInsets: WindowInsetsCompat?
     get() = kotlin.runCatching { requireActivity().windowInsets }
         .getOrNull()
 
@@ -118,7 +118,7 @@ fun Activity.showSystemUI() {
 
 /**
  * Immerse 沉浸。设置沉浸的方式
- *
+ * tip：用于竖屏
  * @param type Type.systemBars(),Type.statusBars(),Type.navigationBars()
  * @param statusIsBlack 专栏文字 true 黑色,false 白色
  * @param navigationIsBlack 导航栏按钮 true 黑色,false 白色
