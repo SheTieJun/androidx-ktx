@@ -6,7 +6,7 @@ afterEvaluate {
             release(MavenPublication) {
                 groupId local_group_id
                 from components.release
-                artifactId = 'livedatelib'
+                artifactId = 'livedate'
                 version = sdk_version
             }
         }

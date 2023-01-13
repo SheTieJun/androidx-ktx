@@ -6,7 +6,7 @@ afterEvaluate {
             release(MavenPublication) {
                 groupId local_group_id
                 from components.release
-                artifactId = 'dataStoreLib'
+                artifactId = 'datastore'
                 version = sdk_version
             }
         }

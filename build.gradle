@@ -8,7 +8,26 @@ plugins {
     id "com.diffplug.spotless" version "6.0.0"
 }
 
-ext.sdk_version = '0.0.5'
-ext.local_group_id = 'com.github.shetiejun'
+ext.sdk_version = '1.0.0'
+ext.local_group_id = 'com.shetj'
 
-apply from : "https://gist.githubusercontent.com/SheTieJun/f4cb1bd33997c2b46d9e3df40b95a02e/raw/c7b65d18aabfeccc09c37e3b2e7964cdd1f8e856/subprojects.gradle"
+
+subprojects {
+
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    apply plugin: 'maven-publish'
+
+    publishing {
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/SheTieJun/androidx-ktx")
+                credentials {
+                    username = "SheTieJun"
+                    password = properties.getProperty("gpk_token") ?: System.getenv("gpk_token")
+                }
+            }
+        }
+    }
+}
