@@ -3,6 +3,8 @@ package me.shetj.activityresult
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.content.pm.ActivityInfo
 import android.graphics.Color
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -40,6 +42,7 @@ import me.shetj.base.ktx.launch
 import me.shetj.base.ktx.logI
 import me.shetj.base.ktx.showToast
 import me.shetj.datastore.dataStoreKit
+import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
@@ -51,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         val mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        immerse(Type.statusBars(),statusIsBlack = true, navigationIsBlack = true,Color.RED)
+        immerse(Type.statusBars(), statusIsBlack = true, navigationIsBlack = true, Color.RED)
         launch {
             dataStoreKit.get(key = "int", -1)
                 .onEach {
@@ -66,7 +69,7 @@ class MainActivity : AppCompatActivity() {
 
         mainBinding.pickContact.setOnClickListener {
             pickContact {
-                Log.i(TAG, it.toString())
+                Timber.i(it.toString())
                 if (it != null) {
                     Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
                 }
@@ -76,7 +79,7 @@ class MainActivity : AppCompatActivity() {
 
         mainBinding.selectFile.setOnClickListener {
             selectMultipleFile {
-                Log.i(TAG, it.toString())
+                Timber.i(it.toString())
                 if (it != null) {
                     Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
                 }
@@ -85,7 +88,7 @@ class MainActivity : AppCompatActivity() {
 
         mainBinding.creatFile.setOnClickListener {
             createFile("test.png") {
-                Log.i(TAG, it.toString())
+                Timber.i(it.toString())
                 if (it != null) {
                     Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
                 }
@@ -94,7 +97,7 @@ class MainActivity : AppCompatActivity() {
 
         mainBinding.takeVideo.setOnClickListener {
             takeVideo {
-                Log.i(TAG, it.toString())
+                Timber.i(it.toString())
                 if (it != null) {
                     Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
                 }
@@ -103,7 +106,7 @@ class MainActivity : AppCompatActivity() {
 
         mainBinding.perimission.setOnClickListener {
             startRequestPermission(permission = READ_EXTERNAL_STORAGE) {
-                Log.i(TAG, it.toString())
+                Timber.i(it.toString())
                 if (it != null) {
                     Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
                 }
@@ -112,7 +115,7 @@ class MainActivity : AppCompatActivity() {
 
         mainBinding.selectPic.setOnClickListener {
             selectFile {
-                Log.i(TAG, it.toString())
+                Timber.i(it.toString())
                 if (it != null) {
                     Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
                 }
@@ -121,12 +124,12 @@ class MainActivity : AppCompatActivity() {
 
         mainBinding.takePic.setOnClickListener {
             takePicture {
-                Log.i(TAG, it.toString())
+                Timber.i(it.toString())
                 if (it != null) {
                     Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
                     cropImage(CropImage(it, 16, 9)) { uri ->
                         if (uri != null) {
-                            Log.i(TAG, uri.toString())
+                            Timber.tag(TAG).i(uri.toString())
                             Toast.makeText(this, uri.toString(), Toast.LENGTH_LONG).show()
                         }
                     }
@@ -154,37 +157,39 @@ class MainActivity : AppCompatActivity() {
 
 
         mainBinding.pickVisualMedia.setOnClickListener {
-            pickVisualMedia(PickVisualMediaRequest(VideoOnly)){ uri ->
+            if (!isPhotoPickerAvailable()) return@setOnClickListener
+            pickVisualMedia(PickVisualMediaRequest(VideoOnly)) { uri ->
                 if (uri != null) {
-                    Log.i(TAG, uri.toString())
+                    Timber.i(uri.toString())
                     Toast.makeText(this, uri.toString(), Toast.LENGTH_LONG).show()
                 }
             }
         }
-        
-        mainBinding.pickMultiVisualMedia.setOnClickListener{
-            pickMultipleVisualMedia(PickVisualMediaRequest(ImageOnly)){ uri ->
+
+        mainBinding.pickMultiVisualMedia.setOnClickListener {
+            if (!isPhotoPickerAvailable()) return@setOnClickListener
+            pickMultipleVisualMedia(PickVisualMediaRequest(ImageOnly)) { uri ->
                 if (uri != null) {
-                    Log.i(TAG, uri.toString())
+                    Timber.i(uri.toString())
                     Toast.makeText(this, uri.toString(), Toast.LENGTH_LONG).show()
                 }
             }
         }
 
         mainBinding.DataStore.setOnClickListener {
-            if (i == 2){
+            if (i == 2) {
                 dataStoreKit.getFirstBlock("int", -1).toString().logI("dataStoreKit:getFirstBlock")
                 i++
                 return@setOnClickListener
             }
-            if (i==4){
-                dataStoreKit.saveBlock("int",i++)
+            if (i == 4) {
+                dataStoreKit.saveBlock("int", i++)
                 "$i".logI("dataStoreKit:saveBlock")
-                i=0
+                i = 0
                 return@setOnClickListener
             }
             launch {
-               if (i > 3) {
+                if (i > 3) {
                     dataStoreKit.remove<Int>(key = "int")
                     i++
                 } else {
@@ -197,10 +202,16 @@ class MainActivity : AppCompatActivity() {
             immerse(type = Type.statusBars(), statusIsBlack = true, color = Color.RED)
         }
         mainBinding.immerse2.setOnClickListener {
-            immerse(type = Type.navigationBars(), navigationIsBlack = true,color = Color.RED)
+            immerse(type = Type.navigationBars(), navigationIsBlack = true, color = Color.RED)
         }
         mainBinding.immerse3.setOnClickListener {
-            immerse(type = Type.systemBars(), navigationIsBlack = true,color = Color.RED)
+            immerse(type = Type.systemBars(), navigationIsBlack = true, color = Color.RED)
         }
+
+
+    }
+
+    fun isPhotoPickerAvailable(): Boolean {
+        return VERSION.SDK_INT >= VERSION_CODES.TIRAMISU
     }
 }

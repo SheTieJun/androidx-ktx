@@ -27,12 +27,15 @@ import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.Context
+import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Environment
 import android.os.FileUtils
+import android.os.ext.SdkExtensions.getExtensionVersion
 import android.provider.DocumentsContract
 import android.provider.MediaStore.Audio
 import android.provider.MediaStore.Images.ImageColumns
@@ -40,6 +43,7 @@ import android.provider.MediaStore.Images.Media
 import android.provider.MediaStore.MediaColumns
 import android.provider.MediaStore.Video
 import android.webkit.MimeTypeMap
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.Companion.isPhotoPickerAvailable
 import androidx.annotation.RequiresApi
 import java.io.File
 import java.io.FileOutputStream
@@ -49,6 +53,15 @@ import kotlin.random.Random
  * 安卓Q 文件基础操作
  */
 object FileQUtils {
+
+    /**
+     * Keep file Visit 保存文件长时间访问
+     * @param uri
+     */
+    fun Context.keepFileVisit(uri: Uri){
+        val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        contentResolver.takePersistableUriPermission(uri, flag)
+    }
 
     /**
      * 根据Uri获取文件绝对路径，解决Android4.4以上版本Uri转换 兼容Android 10
