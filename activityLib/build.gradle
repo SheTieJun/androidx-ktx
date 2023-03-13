@@ -37,11 +37,6 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
-    publishing {
-        singleVariant('release') {
-            withSourcesJar()
-        }
-    }
 }
 
 dependencies {

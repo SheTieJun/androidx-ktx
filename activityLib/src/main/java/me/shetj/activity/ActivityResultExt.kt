@@ -327,8 +327,8 @@ fun Fragment.selectFileByDir(dir: Uri?, callback: ActivityResultCallback<Uri?>) 
 /**
  * 创建文件
  */
-fun Fragment.createFile(fileName: String, callback: ActivityResultCallback<Uri?>) {
-    register("CreateDocument", ActivityResultContracts.CreateDocument(), callback)?.launch(fileName)
+fun Fragment.createFile(fileName: String,fileType:String ="*/*", callback: ActivityResultCallback<Uri?>) {
+    register("CreateDocument", ActivityResultContracts.CreateDocument(fileType), callback)?.launch(fileName)
 }
 
 
