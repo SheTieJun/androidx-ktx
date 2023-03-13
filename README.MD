@@ -10,9 +10,9 @@ implementation 'com.github.SheTieJun:androidx-ktx:Tag'
 或者单独获取
 
 ```kotlin
-implementation 'com.github.SheTieJun.androidx-ktx:activityLib:Tag' 
-implementation 'com.github.SheTieJun.androidx-ktx:livedatelib:Tag'  
-implementation 'com.github.SheTieJun.androidx-ktx:dataStoreLib:Tag'  
+implementation 'com.github.SheTieJun.androidx-ktx:datastore:1.1.0'
+implementation 'com.github.SheTieJun.androidx-ktx:livedate:1.1.0'
+implementation 'com.github.SheTieJun.androidx-ktx:activity:1.1.0'
 ```
 
 
