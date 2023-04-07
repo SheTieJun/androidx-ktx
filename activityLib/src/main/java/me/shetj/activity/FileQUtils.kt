@@ -255,6 +255,7 @@ object FileQUtils {
      * @param context
      * @param uri
      * @return
+     * disPlayName 为文件名 replace("/", "_") 为了防止文件名中有/导致文件保存失败（兼容pickVisualMedia）
      */
     @RequiresApi(api = VERSION_CODES.Q)
     private fun uriToFileApiQ(context: Context, uri: Uri): String? {
@@ -276,7 +277,7 @@ object FileQUtils {
                     MimeTypeMap.getSingleton()
                         .getExtensionFromMimeType(contentResolver.getType(uri))
                 }"
-            }
+            }.replace("/", "_")
             val ios = contentResolver.openInputStream(uri)
             if (ios != null) {
                 File("${context.cacheDir.absolutePath}/$displayName")
