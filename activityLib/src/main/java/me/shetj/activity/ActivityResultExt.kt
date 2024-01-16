@@ -53,9 +53,9 @@ import java.util.concurrent.atomic.AtomicInteger
 private val mNextLocalRequestCode: AtomicInteger = AtomicInteger()
 
 fun <I, O> ComponentActivity.register(
-    @NonNull key: String,
-    @NonNull contract: ActivityResultContract<I, O>,
-    @NonNull callback: ActivityResultCallback<O>
+    key: String,
+    contract: ActivityResultContract<I, O>,
+    callback: ActivityResultCallback<O>
 ): ActivityResultLauncher<I> {
     return activityResultRegistry.register(key, contract, callback).also {
         lifecycle.addObserver(object : LifecycleEventObserver {
@@ -69,22 +69,22 @@ fun <I, O> ComponentActivity.register(
 }
 
 fun ComponentActivity.startActivityResultLauncher(
-    @NonNull key: String = "startActivityResult",
-    @NonNull callback: ActivityResultCallback<ActivityResult>
+    key: String = "startActivityResult",
+    callback: ActivityResultCallback<ActivityResult>
 ): ActivityResultLauncher<Intent> {
     return register(key, ActivityResultContracts.StartActivityForResult(), callback)
 }
 
 fun ComponentActivity.startRequestPermissionsLauncher(
-    @NonNull key: String = "startRequestMultiplePermissions",
-    @NonNull callback: ActivityResultCallback<Map<String, Boolean>>
+    key: String = "startRequestMultiplePermissions",
+    callback: ActivityResultCallback<Map<String, Boolean>>
 ): ActivityResultLauncher<Array<String>> {
     return register(key, ActivityResultContracts.RequestMultiplePermissions(), callback)
 }
 
 fun ComponentActivity.startRequestPermissionLauncher(
-    @NonNull key: String = "startRequestPermission",
-    @NonNull callback: ActivityResultCallback<Boolean>
+    key: String = "startRequestPermission",
+    callback: ActivityResultCallback<Boolean>
 ): ActivityResultLauncher<String> {
     return register(key, ActivityResultContracts.RequestPermission(), callback)
 }
@@ -95,8 +95,8 @@ fun ComponentActivity.startRequestPermissionLauncher(
  * 获取多个权限
  */
 fun ComponentActivity.startRequestPermissions(
-    @NonNull permissions: Array<String>,
-    @NonNull callback: ActivityResultCallback<Map<String, Boolean>>
+    permissions: Array<String>,
+    callback: ActivityResultCallback<Map<String, Boolean>>
 ) {
     return startRequestPermissionsLauncher("startRequestMultiplePermissions", callback).launch(permissions)
 }
@@ -106,8 +106,8 @@ fun ComponentActivity.startRequestPermissions(
  * 获取单个权限
  */
 fun ComponentActivity.startRequestPermission(
-    @NonNull permission: String,
-    @NonNull callback: ActivityResultCallback<Boolean>
+    permission: String,
+    callback: ActivityResultCallback<Boolean>
 ) {
     return startRequestPermissionLauncher("startRequestPermission", callback).launch(permission)
 }
@@ -117,8 +117,8 @@ fun ComponentActivity.startRequestPermission(
  * startActivityResult
  */
 fun ComponentActivity.startActivityResult(
-    @NonNull intent: Intent,
-    @NonNull callback: ActivityResultCallback<ActivityResult>
+    intent: Intent,
+    callback: ActivityResultCallback<ActivityResult>
 ) {
     return startActivityResultLauncher("startActivityResult", callback).launch(intent)
 }

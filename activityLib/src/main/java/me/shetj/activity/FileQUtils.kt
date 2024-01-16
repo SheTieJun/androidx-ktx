@@ -30,24 +30,23 @@ import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
-import android.os.Build
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Environment
 import android.os.FileUtils
-import android.os.ext.SdkExtensions.getExtensionVersion
 import android.provider.DocumentsContract
 import android.provider.MediaStore.Audio
 import android.provider.MediaStore.Images.ImageColumns
 import android.provider.MediaStore.Images.Media
 import android.provider.MediaStore.MediaColumns
 import android.provider.MediaStore.Video
+import android.provider.OpenableColumns
 import android.webkit.MimeTypeMap
-import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.Companion.isPhotoPickerAvailable
 import androidx.annotation.RequiresApi
 import java.io.File
 import java.io.FileOutputStream
-import kotlin.random.Random
+import java.math.BigInteger
+import java.security.MessageDigest
 
 /**
  * 安卓Q 文件基础操作
@@ -58,7 +57,7 @@ object FileQUtils {
      * Keep file Visit 保存文件长时间访问
      * @param uri
      */
-    fun Context.keepFileVisit(uri: Uri){
+    fun Context.keepFileVisit(uri: Uri) {
         val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
         contentResolver.takePersistableUriPermission(uri, flag)
     }
@@ -68,18 +67,17 @@ object FileQUtils {
      *
      * @param context
      * @param uri
+     * @param isTemp Android 10 是否是临时文件名称，如果不是，会生成：时间戳+文件名，否则直接获取文件的文件名
      */
-    fun getFileAbsolutePath(context: Context?, uri: Uri?): String? {
+    fun getFileAbsolutePath(context: Context?, uri: Uri?, isTemp: Boolean = true): String? {
         if (context == null || uri == null) {
             return null
         }
         if (VERSION.SDK_INT < VERSION_CODES.KITKAT) {
             return getRealFilePath(context, uri)
         }
-        if (VERSION.SDK_INT >= VERSION_CODES.KITKAT && VERSION.SDK_INT < VERSION_CODES.Q && DocumentsContract.isDocumentUri(
-                context,
-                uri
-            )
+        if (VERSION.SDK_INT >= VERSION_CODES.KITKAT && VERSION.SDK_INT < VERSION_CODES.Q
+            && DocumentsContract.isDocumentUri(context, uri)
         ) {
             if (isExternalStorageDocument(uri)) {
                 val docId = DocumentsContract.getDocumentId(uri)
@@ -107,9 +105,11 @@ object FileQUtils {
                     "image" -> {
                         contentUri = Media.EXTERNAL_CONTENT_URI
                     }
+
                     "video" -> {
                         contentUri = Video.Media.EXTERNAL_CONTENT_URI
                     }
+
                     "audio" -> {
                         contentUri = Audio.Media.EXTERNAL_CONTENT_URI
                     }
@@ -120,7 +120,7 @@ object FileQUtils {
             }
         } // MediaStore (and general)
         if (VERSION.SDK_INT >= VERSION_CODES.Q) {
-            return uriToFileApiQ(context, uri)
+            return uriToFileApiQ(context, uri,isTemp)
         } else if ("content".equals(uri.scheme, ignoreCase = true)) {
             // Return the remote address
             return if (isGooglePhotosUri(uri)) {
@@ -151,8 +151,6 @@ object FileQUtils {
         } else if (ContentResolver.SCHEME_CONTENT == scheme) {
             val projection = arrayOf(ImageColumns.DATA)
             val cursor = context.contentResolver.query(uri, projection, null, null, null)
-
-//            Cursor cursor = context.getContentResolver().query(uri, new String[]{MediaStore.Images.ImageColumns.DATA}, null, null, null);
             if (null != cursor) {
                 if (cursor.moveToFirst()) {
                     val index = cursor.getColumnIndex(ImageColumns.DATA)
@@ -258,36 +256,69 @@ object FileQUtils {
      * disPlayName 为文件名 replace("/", "_") 为了防止文件名中有/导致文件保存失败（兼容pickVisualMedia）
      */
     @RequiresApi(api = VERSION_CODES.Q)
-    private fun uriToFileApiQ(context: Context, uri: Uri): String? {
-        return if (uri.scheme == ContentResolver.SCHEME_FILE)
+    private fun uriToFileApiQ(context: Context, uri: Uri, filename10IsTemp: Boolean): String? {
+        return if (uri.scheme == ContentResolver.SCHEME_FILE) {
             File(requireNotNull(uri.path)).path
-        else if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
-            // 把文件保存到沙盒
-            val start = uri.path?.lastIndexOf(".") ?: -1
-            // 把文件保存到沙盒
+        } else if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
+            // 把文件保存到沙盒,算是临时文件
             val contentResolver = context.contentResolver
-            val displayName = if (start > 0) {
-                // 因为存在部分文件的扩展名称获取错误，所以先用文件原有的扩展名称，在使用
-                "${System.currentTimeMillis()}${Random.nextInt(0, 9999)}.${
-                    uri.path?.substring(start + 1) ?: MimeTypeMap.getSingleton()
-                        .getExtensionFromMimeType(contentResolver.getType(uri))
-                }"
-            } else {
-                "${System.currentTimeMillis()}${Random.nextInt(0, 9999)}.${
-                    MimeTypeMap.getSingleton()
-                        .getExtensionFromMimeType(contentResolver.getType(uri))
-                }"
-            }.replace("/", "_")
+            val displayName = getFileName(context, uri, filename10IsTemp).replace("/", "_") // 修复复制文件时，文件名中包含/导致的文件复制失败
             val ios = contentResolver.openInputStream(uri)
             if (ios != null) {
-                File("${context.cacheDir.absolutePath}/$displayName")
-                    .apply {
-                        val fos = FileOutputStream(this)
-                        FileUtils.copy(ios, fos)
-                        fos.close()
-                        ios.close()
-                    }.path
-            } else null
-        } else null
+                if (filename10IsTemp) {//临时文件，放在cache目录下
+                    File("${context.cacheDir.absolutePath}/$displayName")
+                        .apply {
+                            val fos = FileOutputStream(this)
+                            FileUtils.copy(ios, fos)
+                            fos.close()
+                            ios.close()
+                        }.path
+                } else {
+                    File("${context.filesDir.absolutePath}/$displayName")
+                        .apply {
+                            val fos = FileOutputStream(this)
+                            FileUtils.copy(ios, fos)
+                            fos.close()
+                            ios.close()
+                        }.path
+                }
+            } else {
+                null
+            }
+        } else {
+            null
+        }
+    }
+
+    private fun getFileName(context: Context, uri: Uri, filename10IsTemp: Boolean = true): String {
+        var fileName: String? = null
+        val contentResolver = context.contentResolver
+        return kotlin.runCatching {
+            if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
+                val cursor = contentResolver.query(uri, null, null, null, null)
+                cursor.use { cu ->
+                    if (cu != null && cu.moveToFirst()) {
+                        fileName = cu.getString(cu.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
+                    }
+                }
+            }
+            if (fileName == null) {
+                fileName = uri.lastPathSegment
+            }
+            //不是临时文件，就生成时间戳+文件名的名字，防止文件名重复被覆盖
+            if (!filename10IsTemp && fileName != null) {
+                fileName = System.currentTimeMillis().toString() + fileName
+            }
+            fileName!!
+        }.getOrDefault("${uri.toString().md5()}.${
+            MimeTypeMap.getSingleton()
+                .getExtensionFromMimeType(contentResolver.getType(uri))
+        }")
+    }
+
+
+    private fun String.md5(): String {
+        val md = MessageDigest.getInstance("MD5")
+        return BigInteger(1, md.digest(toByteArray())).toString(16).padStart(32, '0')
     }
 }

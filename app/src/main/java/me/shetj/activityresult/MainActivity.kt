@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import me.shetj.activity.CropImage
+import me.shetj.activity.FileQUtils
 import me.shetj.activity.createFile
 import me.shetj.activity.createSimDialog
 import me.shetj.activity.cropImage
@@ -63,6 +64,15 @@ class MainActivity : AppCompatActivity() {
                 .collect()
 
         }
+
+        launch {
+            dataStoreKit.get(key = "int2", -1)
+                .onEach {
+                    it.toString().logI("dataStoreKit2:get:$it")
+                }
+                .collect()
+        }
+
         launch {
             dataStoreKit.getFirst(key = "int", -1).toString().logI("dataStoreKit:getFirst")
         }
@@ -161,6 +171,7 @@ class MainActivity : AppCompatActivity() {
             pickVisualMedia(PickVisualMediaRequest(VideoOnly)) { uri ->
                 if (uri != null) {
                     Timber.i(uri.toString())
+                    Timber.i(FileQUtils.getFileAbsolutePath(this, uri))
                     Toast.makeText(this, uri.toString(), Toast.LENGTH_LONG).show()
                 }
             }
