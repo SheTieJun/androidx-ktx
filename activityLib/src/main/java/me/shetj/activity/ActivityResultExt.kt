@@ -26,7 +26,6 @@ package me.shetj.activity
 
 import android.content.Intent
 import android.net.Uri
-import android.text.InputType
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
@@ -35,8 +34,6 @@ import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.VisualMediaType
-import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle.Event
 import androidx.lifecycle.LifecycleEventObserver
@@ -98,6 +95,10 @@ fun ComponentActivity.startRequestPermissions(
     permissions: Array<String>,
     callback: ActivityResultCallback<Map<String, Boolean>>
 ) {
+    if (hasPermission(*permissions)) {
+        callback.onActivityResult(permissions.associateWith { true })
+        return
+    }
     return startRequestPermissionsLauncher("startRequestMultiplePermissions", callback).launch(permissions)
 }
 
@@ -109,6 +110,10 @@ fun ComponentActivity.startRequestPermission(
     permission: String,
     callback: ActivityResultCallback<Boolean>
 ) {
+    if (hasPermission(permission)){
+        callback.onActivityResult(true)
+        return
+    }
     return startRequestPermissionLauncher("startRequestPermission", callback).launch(permission)
 }
 
@@ -274,6 +279,10 @@ fun Fragment.startRequestPermissions(
     permissions: Array<String>,
     callback: ActivityResultCallback<Map<String, Boolean>>
 ) {
+    if (requireActivity().hasPermission(*permissions)) {
+        callback.onActivityResult(permissions.associateWith { true })
+        return
+    }
     startRequestPermissionsLauncher(key, callback)?.launch(permissions)
 }
 
@@ -283,6 +292,10 @@ fun Fragment.startRequestPermission(
     permission: String,
     callback: ActivityResultCallback<Boolean>
 ) {
+    if (requireActivity().hasPermission(permission)){
+        callback.onActivityResult(true)
+        return
+    }
     startRequestPermissionLauncher(key, callback)?.launch(permission)
 }
 

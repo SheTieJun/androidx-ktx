@@ -21,11 +21,11 @@ import androidx.viewbinding.ViewBinding
  * ```
  * @param VB viewBinding
  * @param onViewCreated
- * @param setWindowSizeChange
+ * @param windowSizeChange
  */
 inline fun <reified VB : ViewBinding> Context.createSimDialog(
     crossinline onViewCreated: ((mVB: VB) -> Unit) = { },
-    crossinline setWindowSizeChange: ((dialog: AlertDialog, window: Window?) -> Unit) = { _, window ->
+    crossinline windowSizeChange: ((dialog: AlertDialog, window: Window?) -> Unit) = { _, window ->
         window?.setLayout(900, LinearLayout.LayoutParams.WRAP_CONTENT)
     }
 ): AlertDialog? {
@@ -35,6 +35,6 @@ inline fun <reified VB : ViewBinding> Context.createSimDialog(
     return AlertDialog.Builder(this)
         .setView(mVB.root)
         .show()?.apply {
-            setWindowSizeChange.invoke(this, this.window)
+            windowSizeChange.invoke(this, this.window)
         }
 }

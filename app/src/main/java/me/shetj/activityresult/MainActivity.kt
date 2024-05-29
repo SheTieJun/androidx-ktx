@@ -1,15 +1,12 @@
 package me.shetj.activityresult
 
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageAndVideo
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.VideoOnly
 import androidx.appcompat.app.AppCompatActivity
@@ -32,7 +29,6 @@ import me.shetj.activity.pickMultipleVisualMedia
 import me.shetj.activity.pickVisualMedia
 import me.shetj.activity.selectFile
 import me.shetj.activity.selectMultipleFile
-import me.shetj.activity.setAppearance
 import me.shetj.activity.showSoftKeyboard
 import me.shetj.activity.startRequestPermission
 import me.shetj.activity.takePicture
@@ -150,7 +146,7 @@ class MainActivity : AppCompatActivity() {
         mainBinding.dialog.setOnClickListener {
             createSimDialog<LayoutDialogTestBinding>(onViewCreated = {
 
-            }, setWindowSizeChange = { dialog, _ ->
+            }, windowSizeChange = { dialog, _ ->
                 dialog.context.lifeScope?.launch {
                     "已通过dialog的context获取到AppCompatActivity的lifeScope".showToast()
                 }

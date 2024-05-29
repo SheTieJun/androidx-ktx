@@ -1,26 +1,3 @@
-/*
- * MIT License
- *
- * Copyright (c) 2019 SheTieJun
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
 package me.shetj.activity
 
 import android.annotation.SuppressLint
@@ -36,8 +13,8 @@ import android.os.Environment
 import android.os.FileUtils
 import android.provider.DocumentsContract
 import android.provider.MediaStore.Audio
+import android.provider.MediaStore.Images
 import android.provider.MediaStore.Images.ImageColumns
-import android.provider.MediaStore.Images.Media
 import android.provider.MediaStore.MediaColumns
 import android.provider.MediaStore.Video
 import android.provider.OpenableColumns
@@ -48,36 +25,30 @@ import java.io.FileOutputStream
 import java.math.BigInteger
 import java.security.MessageDigest
 
+
 /**
  * 安卓Q 文件基础操作
  */
 object FileQUtils {
 
     /**
-     * Keep file Visit 保存文件长时间访问
-     * @param uri
-     */
-    fun Context.keepFileVisit(uri: Uri) {
-        val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
-        contentResolver.takePersistableUriPermission(uri, flag)
-    }
-
-    /**
      * 根据Uri获取文件绝对路径，解决Android4.4以上版本Uri转换 兼容Android 10
      *
      * @param context
      * @param uri
-     * @param isTemp Android 10 是否是临时文件名称，如果不是，会生成：时间戳+文件名，否则直接获取文件的文件名
+     * @param filename10IsTemp 是否是临时文件
      */
-    fun getFileAbsolutePath(context: Context?, uri: Uri?, isTemp: Boolean = true): String? {
+    fun getFileAbsolutePath(context: Context?, uri: Uri?, filename10IsTemp: Boolean = true): String? {
         if (context == null || uri == null) {
             return null
         }
         if (VERSION.SDK_INT < VERSION_CODES.KITKAT) {
             return getRealFilePath(context, uri)
         }
-        if (VERSION.SDK_INT >= VERSION_CODES.KITKAT && VERSION.SDK_INT < VERSION_CODES.Q
-            && DocumentsContract.isDocumentUri(context, uri)
+        if (VERSION.SDK_INT >= VERSION_CODES.KITKAT && VERSION.SDK_INT < VERSION_CODES.Q && DocumentsContract.isDocumentUri(
+                context,
+                uri
+            )
         ) {
             if (isExternalStorageDocument(uri)) {
                 val docId = DocumentsContract.getDocumentId(uri)
@@ -103,7 +74,7 @@ object FileQUtils {
                 var contentUri: Uri? = null
                 when (type) {
                     "image" -> {
-                        contentUri = Media.EXTERNAL_CONTENT_URI
+                        contentUri = Images.Media.EXTERNAL_CONTENT_URI
                     }
 
                     "video" -> {
@@ -114,13 +85,13 @@ object FileQUtils {
                         contentUri = Audio.Media.EXTERNAL_CONTENT_URI
                     }
                 }
-                val selection = Media._ID + "=?"
+                val selection = MediaColumns._ID + "=?"
                 val selectionArgs = arrayOf(split[1])
-                return getDataColumn(context, contentUri, selection, selectionArgs)
+                return contentUri?.let { getDataColumn(context, it, selection, selectionArgs) }
             }
         } // MediaStore (and general)
         if (VERSION.SDK_INT >= VERSION_CODES.Q) {
-            return uriToFileApiQ(context, uri,isTemp)
+            return uriToFileApiQ(context, uri, filename10IsTemp)
         } else if ("content".equals(uri.scheme, ignoreCase = true)) {
             // Return the remote address
             return if (isGooglePhotosUri(uri)) {
@@ -137,7 +108,7 @@ object FileQUtils {
         return null
     }
 
-    //此方法 只能用于4.4以下的版本
+    // 此方法 只能用于4.4以下的版本
     private fun getRealFilePath(context: Context, uri: Uri?): String? {
         if (null == uri) {
             return null
@@ -182,15 +153,15 @@ object FileQUtils {
 
     private fun getDataColumn(
         context: Context,
-        uri: Uri?,
+        uri: Uri,
         selection: String?,
         selectionArgs: Array<String>?
     ): String? {
         var cursor: Cursor? = null
-        val column = Media.DATA
+        val column = MediaColumns.DATA
         val projection = arrayOf(column)
         try {
-            cursor = context.contentResolver.query(uri!!, projection, selection, selectionArgs, null)
+            cursor = context.contentResolver.query(uri, projection, selection, selectionArgs, null)
             if (cursor != null && cursor.moveToFirst()) {
                 val index = cursor.getColumnIndexOrThrow(column)
                 return cursor.getString(index)
@@ -253,7 +224,6 @@ object FileQUtils {
      * @param context
      * @param uri
      * @return
-     * disPlayName 为文件名 replace("/", "_") 为了防止文件名中有/导致文件保存失败（兼容pickVisualMedia）
      */
     @RequiresApi(api = VERSION_CODES.Q)
     private fun uriToFileApiQ(context: Context, uri: Uri, filename10IsTemp: Boolean): String? {
@@ -265,23 +235,13 @@ object FileQUtils {
             val displayName = getFileName(context, uri, filename10IsTemp).replace("/", "_") // 修复复制文件时，文件名中包含/导致的文件复制失败
             val ios = contentResolver.openInputStream(uri)
             if (ios != null) {
-                if (filename10IsTemp) {//临时文件，放在cache目录下
-                    File("${context.cacheDir.absolutePath}/$displayName")
-                        .apply {
-                            val fos = FileOutputStream(this)
-                            FileUtils.copy(ios, fos)
-                            fos.close()
-                            ios.close()
-                        }.path
-                } else {
-                    File("${context.filesDir.absolutePath}/$displayName")
-                        .apply {
-                            val fos = FileOutputStream(this)
-                            FileUtils.copy(ios, fos)
-                            fos.close()
-                            ios.close()
-                        }.path
-                }
+                File("${context.cacheDir.absolutePath}/$displayName")
+                    .apply {
+                        val fos = FileOutputStream(this)
+                        FileUtils.copy(ios, fos)
+                        fos.close()
+                        ios.close()
+                    }.path
             } else {
                 null
             }
@@ -293,29 +253,53 @@ object FileQUtils {
     private fun getFileName(context: Context, uri: Uri, filename10IsTemp: Boolean = true): String {
         var fileName: String? = null
         val contentResolver = context.contentResolver
-        return kotlin.runCatching {
-            if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
-                val cursor = contentResolver.query(uri, null, null, null, null)
-                cursor.use { cu ->
-                    if (cu != null && cu.moveToFirst()) {
-                        fileName = cu.getString(cu.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
-                    }
+        if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
+            val cursor = contentResolver.query(uri, null, null, null, null)
+            cursor.use { cu ->
+                if (cu != null && cu.moveToFirst()) {
+                    fileName = cu.getString(cu.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
                 }
             }
-            if (fileName == null) {
-                fileName = uri.lastPathSegment
-            }
-            //不是临时文件，就生成时间戳+文件名的名字，防止文件名重复被覆盖
-            if (!filename10IsTemp && fileName != null) {
-                fileName = System.currentTimeMillis().toString() + fileName
-            }
-            fileName!!
-        }.getOrDefault("${uri.toString().md5()}.${
+        }
+        if (fileName == null) {
+            fileName = uri.lastPathSegment
+        }
+        if (!filename10IsTemp && fileName != null) {
+            fileName = System.currentTimeMillis().toString() + fileName
+        }
+        return fileName ?: "${uri.toString().md5()}.${
             MimeTypeMap.getSingleton()
                 .getExtensionFromMimeType(contentResolver.getType(uri))
-        }")
+        }"
     }
 
+    /**
+     * Take file permission
+     * 获取长时间的文件读取权限,
+     * ```
+     *         // 获取当前应用的包名
+     *         val packageName = context.packageName
+     *         // 创建一个 Intent
+     *         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+     *         intent.addFlags(flag) //注意这里就需要添加flag
+     *         intent.setPackage(packageName)
+     *         // 启动 Intent，并获取返回的 URI
+     *         val treeUri = intent.data ?: return
+     *         // 授予持久的 URI 权限
+     * ```
+     * @param uri
+     */
+    fun takeFilePermission(context: Context, uri: Uri) {
+        val flag: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+        // 获取 ContentResolver 对象
+        val contentResolver = context.contentResolver
+        // 检查是否已经有持久的 URI 权限
+        if (contentResolver.persistedUriPermissions.isNotEmpty()) {
+            return
+        }
+        contentResolver.takePersistableUriPermission(uri, flag)
+    }
 
     private fun String.md5(): String {
         val md = MessageDigest.getInstance("MD5")

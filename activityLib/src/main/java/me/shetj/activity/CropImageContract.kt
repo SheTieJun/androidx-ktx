@@ -17,8 +17,6 @@ import java.io.File
 
 /**
  * Crop image contract
- *
- * @constructor Create empty Crop image contract
  */
 class CropImageContract : ActivityResultContract<CropImage, Uri?>() {
     //裁剪后输出的图片文件Uri
