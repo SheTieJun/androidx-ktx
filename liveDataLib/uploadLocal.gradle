@@ -1,0 +1,19 @@
+apply plugin: 'maven-publish'
+
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                groupId local_group_id
+                artifactId = 'livedate'
+                version = sdk_version
+
+                afterEvaluate {
+                    from components.release
+                }
+            }
+        }
+    }
+}
+

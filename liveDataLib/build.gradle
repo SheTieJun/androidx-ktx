@@ -37,3 +37,5 @@ dependencies {
     compileOnly("androidx.lifecycle:lifecycle-livedata-ktx:2.8.4")
     compileOnly 'androidx.core:core-ktx:1.13.1'
 }
+
+apply from : "uploadLocal.gradle"

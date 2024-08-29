@@ -9,24 +9,24 @@ plugins {
 
 ext.sdk_version = '1.0.0'
 ext.local_group_id = 'com.shetj'
-
-
-subprojects {
-
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    apply plugin: 'maven-publish'
-
-    publishing {
-        repositories {
-            maven {
-                name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/SheTieJun/androidx-ktx")
-                credentials {
-                    username = "SheTieJun"
-                    password = properties.getProperty("gpk_token") ?: System.getenv("gpk_token")
-                }
-            }
-        }
-    }
-}
+//
+//
+//subprojects {
+//
+//    Properties properties = new Properties()
+//    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+//    apply plugin: 'maven-publish'
+//
+//    publishing {
+//        repositories {
+//            maven {
+//                name = "GitHubPackages"
+//                url = uri("https://maven.pkg.github.com/SheTieJun/androidx-ktx")
+//                credentials {
+//                    username = "SheTieJun"
+//                    password = properties.getProperty("gpk_token") ?: System.getenv("gpk_token")
+//                }
+//            }
+//        }
+//    }
+//}
