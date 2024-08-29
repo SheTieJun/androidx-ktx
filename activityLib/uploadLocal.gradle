@@ -18,7 +18,7 @@ afterEvaluate {
         publications {
             release(MavenPublication) {
                 groupId local_group_id
-                artifact sourceJar
+                artifact androidSourcesJar
                 from components.release
                 artifactId = 'activity'
                 version = sdk_version
