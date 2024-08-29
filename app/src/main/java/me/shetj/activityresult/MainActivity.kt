@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         val mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        immerse(Type.statusBars(), statusIsBlack = true, navigationIsBlack = true, Color.RED)
+        immerse(Type.statusBars(), statusIsBlackText = true, navigationIsBlackLine = true, color =  Color.RED)
         launch {
             dataStoreKit.get(key = "int", -1)
                 .onEach {
@@ -144,9 +144,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         mainBinding.dialog.setOnClickListener {
-            createSimDialog<LayoutDialogTestBinding>(onViewCreated = {
+            createSimDialog<LayoutDialogTestBinding>(onBeforeShow = { _, _ ->
 
-            }, windowSizeChange = { dialog, _ ->
+            }, onViewCreated = { _, _ ->
+
+            }, setWindowSizeChange = { dialog, _ ->
                 dialog.context.lifeScope?.launch {
                     "已通过dialog的context获取到AppCompatActivity的lifeScope".showToast()
                 }
@@ -206,13 +208,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         mainBinding.immerse1.setOnClickListener {
-            immerse(type = Type.statusBars(), statusIsBlack = true, color = Color.RED)
+            immerse(type = Type.statusBars(), statusIsBlackText = true, color = Color.BLUE)
         }
         mainBinding.immerse2.setOnClickListener {
-            immerse(type = Type.navigationBars(), navigationIsBlack = true, color = Color.RED)
+            immerse(type = Type.navigationBars(), navigationIsBlackLine = true, color = Color.BLUE)
         }
         mainBinding.immerse3.setOnClickListener {
-            immerse(type = Type.systemBars(), navigationIsBlack = true, color = Color.RED)
+            immerse(type = Type.systemBars(), navigationIsBlackLine = true, color = Color.BLUE)
         }
 
 

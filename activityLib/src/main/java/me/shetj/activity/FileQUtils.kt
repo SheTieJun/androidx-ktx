@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.Context
-import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
 import android.os.Build.VERSION
@@ -24,7 +23,6 @@ import java.io.File
 import java.io.FileOutputStream
 import java.math.BigInteger
 import java.security.MessageDigest
-
 
 /**
  * 安卓Q 文件基础操作
@@ -203,8 +201,11 @@ object FileQUtils {
         val filePathColumn = arrayOf(MediaColumns.DATA, MediaColumns.DISPLAY_NAME)
         val contentResolver = context.contentResolver
         val cursor = contentResolver.query(
-            uri, filePathColumn, null,
-            null, null
+            uri,
+            filePathColumn,
+            null,
+            null,
+            null
         )
         if (cursor != null) {
             cursor.moveToFirst()
@@ -253,6 +254,8 @@ object FileQUtils {
     private fun getFileName(context: Context, uri: Uri, filename10IsTemp: Boolean = true): String {
         var fileName: String? = null
         val contentResolver = context.contentResolver
+        val mimeType = MimeTypeMap.getSingleton()
+            .getExtensionFromMimeType(contentResolver.getType(uri)) ?: ""
         if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
             val cursor = contentResolver.query(uri, null, null, null, null)
             cursor.use { cu ->
@@ -262,43 +265,16 @@ object FileQUtils {
             }
         }
         if (fileName == null) {
-            fileName = uri.lastPathSegment
+            fileName = uri.lastPathSegment + ".$mimeType"
         }
-        if (!filename10IsTemp && fileName != null) {
+        if (!filename10IsTemp) {
             fileName = System.currentTimeMillis().toString() + fileName
         }
-        return fileName ?: "${uri.toString().md5()}.${
-            MimeTypeMap.getSingleton()
-                .getExtensionFromMimeType(contentResolver.getType(uri))
-        }"
-    }
-
-    /**
-     * Take file permission
-     * 获取长时间的文件读取权限,
-     * ```
-     *         // 获取当前应用的包名
-     *         val packageName = context.packageName
-     *         // 创建一个 Intent
-     *         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-     *         intent.addFlags(flag) //注意这里就需要添加flag
-     *         intent.setPackage(packageName)
-     *         // 启动 Intent，并获取返回的 URI
-     *         val treeUri = intent.data ?: return
-     *         // 授予持久的 URI 权限
-     * ```
-     * @param uri
-     */
-    fun takeFilePermission(context: Context, uri: Uri) {
-        val flag: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-        // 获取 ContentResolver 对象
-        val contentResolver = context.contentResolver
-        // 检查是否已经有持久的 URI 权限
-        if (contentResolver.persistedUriPermissions.isNotEmpty()) {
-            return
+        // 如果文件名不包含后缀名，就加上后缀名
+        if (fileName?.contains(mimeType) != true) {
+            fileName = "$fileName.$mimeType"
         }
-        contentResolver.takePersistableUriPermission(uri, flag)
+        return fileName ?: "${uri.toString().md5()}.$mimeType"
     }
 
     private fun String.md5(): String {

@@ -1,10 +1,16 @@
+@file:JvmName("WinCompat")
+
 package me.shetj.activity
 
 import android.app.Activity
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
-import android.widget.FrameLayout
+import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.ColorInt
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -18,7 +24,7 @@ val Activity.windowInsets: WindowInsetsCompat?
 val Activity.windowInsetsController: WindowInsetsControllerCompat
     get() = WindowCompat.getInsetsController(window, findViewById(android.R.id.content))
 
-val Fragment.windowInsets: WindowInsetsCompat?
+val Fragment.windowInsetsCompat: WindowInsetsCompat?
     get() = kotlin.runCatching { requireActivity().windowInsets }
         .getOrNull()
 
@@ -58,7 +64,6 @@ fun Activity.hideNavigationBars() {
     }
 }
 
-
 /**
  * 展示导航栏
  */
@@ -85,6 +90,76 @@ fun Activity.hideSystemUI() {
 }
 
 /**
+ * Immerse 沉浸。设置沉浸的方式
+ *
+ * @param type Type.systemBars(),Type.statusBars(),Type.navigationBars()
+ * @param statusIsBlackText 专栏文字 true 黑色,false 白色
+ * @param navigationIsBlackLine 导航栏按钮 true 黑色,false 白色
+ * @param color
+ */
+@JvmOverloads
+fun AppCompatActivity.immerse(
+    @Type.InsetsType type: Int = Type.systemBars(),
+    statusIsBlackText: Boolean = isNeedBlackText,
+    navigationIsBlackLine: Boolean = true,
+    @ColorInt color: Int = Color.TRANSPARENT
+) {
+
+    if (color != Color.TRANSPARENT) {
+        if (statusIsBlackText) {
+            enableEdgeToEdge(
+                statusBarStyle = SystemBarStyle.light(color, color),
+                navigationBarStyle = SystemBarStyle.light(color, color)
+            )
+        } else {
+            enableEdgeToEdge(
+                statusBarStyle = SystemBarStyle.dark(color),
+                navigationBarStyle = SystemBarStyle.dark(color)
+            )
+        }
+    } else {
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.auto(color, color, detectDarkMode = { _ ->
+                !statusIsBlackText
+            }),
+            navigationBarStyle = SystemBarStyle.auto(color, color, detectDarkMode = { _ ->
+                !navigationIsBlackLine
+            })
+        )
+    }
+    when (type) {
+        Type.systemBars() -> {
+            ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { v, insets ->
+                v.setPadding(0, 0, 0, 0)
+                insets
+            }
+        }
+
+        Type.statusBars() -> {
+            ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { v, insets ->
+                v.setPadding(0, 0, 0, insets.getInsets(Type.navigationBars()).bottom)
+                insets
+            }
+        }
+
+        Type.navigationBars() -> {
+            ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { v, insets ->
+                v.setPadding(0, insets.getInsets(Type.statusBars()).top, 0, 0)
+                insets
+            }
+        }
+
+        else -> {
+            ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { v, insets ->
+                val systemBars = insets.getInsets(Type.systemBars())
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+                insets
+            }
+        }
+    }
+}
+
+/**
  * 展示系统UI:状态栏和导航栏
  */
 fun Activity.showSystemUI() {
@@ -93,79 +168,40 @@ fun Activity.showSystemUI() {
 }
 
 
+val ComponentActivity.isNeedBlackText: Boolean
+    get() = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) !=
+            Configuration.UI_MODE_NIGHT_YES
+
 /**
- * Immerse 沉浸。设置沉浸的方式
- * tip：用于竖屏
- * @param type Type.systemBars(),Type.statusBars(),Type.navigationBars()
- * @param statusIsBlack 专栏文字 true 黑色,false 白色
- * @param navigationIsBlack 导航栏按钮 true 黑色,false 白色
- * @param color
+ * 不沉侵，只修改状态栏的颜色,导航栏不修改
  */
-@JvmOverloads
-fun Activity.immerse(
-    @Type.InsetsType type: Int = Type.systemBars(),
-    statusIsBlack: Boolean = true,
-    navigationIsBlack: Boolean = true,
+fun ComponentActivity.setAppearance(
+    isBlack: Boolean = isNeedBlackText,
     @ColorInt color: Int = Color.TRANSPARENT
 ) {
 
-    when (type) {
-        Type.systemBars() -> {
-            WindowCompat.setDecorFitsSystemWindows(window, false)
-            updateSystemUIColor(color)
-            windowInsetsController.let { controller ->
-                controller.isAppearanceLightStatusBars = statusIsBlack
-                controller.isAppearanceLightNavigationBars = navigationIsBlack
-            }
-            findViewById<FrameLayout>(android.R.id.content).apply {
-                setPadding(0, 0, 0, 0)
-            }
+    if (color != Color.TRANSPARENT) {
+        if (isBlack) {
+            enableEdgeToEdge(
+                statusBarStyle = SystemBarStyle.light(color, color),
+            )
+        } else {
+            enableEdgeToEdge(
+                statusBarStyle = SystemBarStyle.dark(color),
+            )
         }
-        Type.statusBars() -> {
-            WindowCompat.setDecorFitsSystemWindows(window, false)
-            window.statusBarColor = color
-            windowInsetsController.isAppearanceLightStatusBars = statusIsBlack
-            findViewById<FrameLayout>(android.R.id.content).apply {
-                post {
-                    setPadding(0, 0, 0, getNavigationBarsHeight())
-                }
-            }
-        }
-        Type.navigationBars() -> {
-            WindowCompat.setDecorFitsSystemWindows(window, false)
-            window.navigationBarColor = color
-            windowInsetsController.isAppearanceLightNavigationBars = navigationIsBlack
-            findViewById<FrameLayout>(android.R.id.content).apply {
-                post {
-                    setPadding(0, getStatusBarsHeight(), 0, 0)
-                }
-            }
-        }
-        else -> {
-            // no work
-        }
+    } else {
+        //auto的时候，默认是透明的颜色
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.auto(color, color, detectDarkMode = { _ ->
+                !isBlack
+            })
+        )
+    }
+    ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { v, insets ->
+        val systemBars = insets.getInsets(Type.systemBars())
+        v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+        insets
     }
 }
 
-
-/**
- * 只修改状态栏的颜色
- */
-fun Activity.setAppearance(
-    statusIsBlack: Boolean,
-    @ColorInt color: Int = Color.TRANSPARENT
-) {
-    window.statusBarColor = color
-    windowInsetsController.isAppearanceLightStatusBars = statusIsBlack
-}
-
-/**
- * 修改状态栏、底部的导航栏的颜色
- */
-fun Activity.updateSystemUIColor(@ColorInt color: Int = Color.TRANSPARENT) {
-    window.statusBarColor = color
-    window.navigationBarColor = color
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-        window.navigationBarDividerColor = color
-    }
-}

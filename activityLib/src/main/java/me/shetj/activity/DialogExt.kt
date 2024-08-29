@@ -8,33 +8,22 @@ import androidx.appcompat.app.AlertDialog
 import androidx.viewbinding.ViewBinding
 
 
-/**
- *  Create sim dialog
- * ```
- *   createSimDialog<LayoutDialogTestBinding> (onViewCreated = {
- *      //viewBinding
- *   },
- *   setWindowSizeChange = {dialog,window ->
- *      //可以修改win大小
- *      window?.setLayout(900, LinearLayout.LayoutParams.WRAP_CONTENT)
- *   })
- * ```
- * @param VB viewBinding
- * @param onViewCreated
- * @param windowSizeChange
- */
 inline fun <reified VB : ViewBinding> Context.createSimDialog(
-    crossinline onViewCreated: ((mVB: VB) -> Unit) = { },
-    crossinline windowSizeChange: ((dialog: AlertDialog, window: Window?) -> Unit) = { _, window ->
-        window?.setLayout(900, LinearLayout.LayoutParams.WRAP_CONTENT)
+    crossinline onBeforeShow: ((mVB: VB, dialog: AlertDialog) -> Unit) = { _, _ -> },
+    crossinline onViewCreated: ((mVB: VB, dialog: AlertDialog) -> Unit) = { _, _ -> },
+    crossinline setWindowSizeChange: ((dialog: AlertDialog, window: Window?) -> Unit) = { _, window ->
+        window?.setBackgroundDrawableResource(android.R.color.transparent)
+        window?.setDimAmount(0.3f)
+        window?.setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
     }
-): AlertDialog? {
+): AlertDialog {
     val mVB = VB::class.java.getMethod("inflate", LayoutInflater::class.java)
         .invoke(null, LayoutInflater.from(this)) as VB
-    onViewCreated.invoke(mVB)
     return AlertDialog.Builder(this)
-        .setView(mVB.root)
-        .show()?.apply {
-            windowSizeChange.invoke(this, this.window)
+        .setView(mVB.root).create().apply {
+            onBeforeShow.invoke(mVB, this) //can  dialog.setOnShowListener
+            this.show()
+            onViewCreated.invoke(mVB, this)
+            setWindowSizeChange.invoke(this, this.window)
         }
 }

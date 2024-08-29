@@ -34,10 +34,10 @@ import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.VisualMediaType
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle.Event
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleOwner
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -46,46 +46,36 @@ import java.util.concurrent.atomic.AtomicInteger
 
 /****************************************************************************************************************/
 
-
 private val mNextLocalRequestCode: AtomicInteger = AtomicInteger()
 
 fun <I, O> ComponentActivity.register(
     key: String,
     contract: ActivityResultContract<I, O>,
     callback: ActivityResultCallback<O>
-): ActivityResultLauncher<I> {
-    return activityResultRegistry.register(key, contract, callback).also {
-        lifecycle.addObserver(object : LifecycleEventObserver {
-            override fun onStateChanged(source: LifecycleOwner, event: Event) {
-                if (event == Event.ON_DESTROY) {
-                    it.unregister()
-                }
+) = activityResultRegistry.register(key, contract, callback).also {
+    lifecycle.addObserver(
+        LifecycleEventObserver { _, event ->
+            if (event == Event.ON_DESTROY) {
+                it.unregister()
             }
-        })
-    }
+        }
+    )
 }
 
 fun ComponentActivity.startActivityResultLauncher(
     key: String = "startActivityResult",
     callback: ActivityResultCallback<ActivityResult>
-): ActivityResultLauncher<Intent> {
-    return register(key, ActivityResultContracts.StartActivityForResult(), callback)
-}
+) = register(key, ActivityResultContracts.StartActivityForResult(), callback)
 
 fun ComponentActivity.startRequestPermissionsLauncher(
     key: String = "startRequestMultiplePermissions",
     callback: ActivityResultCallback<Map<String, Boolean>>
-): ActivityResultLauncher<Array<String>> {
-    return register(key, ActivityResultContracts.RequestMultiplePermissions(), callback)
-}
+) = register(key, ActivityResultContracts.RequestMultiplePermissions(), callback)
 
 fun ComponentActivity.startRequestPermissionLauncher(
     key: String = "startRequestPermission",
     callback: ActivityResultCallback<Boolean>
-): ActivityResultLauncher<String> {
-    return register(key, ActivityResultContracts.RequestPermission(), callback)
-}
-
+) = register(key, ActivityResultContracts.RequestPermission(), callback)
 
 //region Activity 部分
 /**
@@ -95,13 +85,12 @@ fun ComponentActivity.startRequestPermissions(
     permissions: Array<String>,
     callback: ActivityResultCallback<Map<String, Boolean>>
 ) {
-    if (hasPermission(*permissions, isRequest = false)) {
+    if (hasPermission(*permissions,isRequest = false)) {
         callback.onActivityResult(permissions.associateWith { true })
         return
     }
     return startRequestPermissionsLauncher("startRequestMultiplePermissions", callback).launch(permissions)
 }
-
 
 /**
  * 获取单个权限
@@ -110,13 +99,12 @@ fun ComponentActivity.startRequestPermission(
     permission: String,
     callback: ActivityResultCallback<Boolean>
 ) {
-    if (hasPermission(permission, isRequest = false)){
+    if(hasPermission(permission, isRequest = false)){
         callback.onActivityResult(true)
         return
     }
     return startRequestPermissionLauncher("startRequestPermission", callback).launch(permission)
 }
-
 
 /**
  * startActivityResult
@@ -127,7 +115,6 @@ fun ComponentActivity.startActivityResult(
 ) {
     return startActivityResultLauncher("startActivityResult", callback).launch(intent)
 }
-
 
 /**
  * 选择一个文件
@@ -153,6 +140,9 @@ fun ComponentActivity.searchFile(
     register("OpenDocument", ActivityResultContracts.OpenDocument(), callback).launch(type)
 }
 
+fun ComponentActivity.searchFiles(type: Array<String>, callback: ActivityResultCallback<List<@JvmSuppressWildcards Uri>>) {
+    register("OpenDocuments", ActivityResultContracts.OpenMultipleDocuments(), callback).launch(type)
+}
 
 /**
  * 创建文件
@@ -164,7 +154,6 @@ fun ComponentActivity.createFile(
 ) {
     register("CreateDocument", ActivityResultContracts.CreateDocument(mimeType), callback).launch(fileName)
 }
-
 
 /**
  * 拍照
@@ -190,7 +179,6 @@ fun ComponentActivity.takeVideo(callback: ActivityResultCallback<Uri?>) {
     }.launch(pathUri)
 }
 
-
 /**
  * 选择联系人
  */
@@ -205,7 +193,6 @@ fun ComponentActivity.cropImage(imageResult: CropImage, callback: ActivityResult
     register("cropImage", CropImageContract(), callback).launch(imageResult)
 }
 
-
 /**
  * Pick visual media
  *
@@ -215,16 +202,29 @@ fun ComponentActivity.pickVisualMedia(inputType: PickVisualMediaRequest, callbac
     register("PickVisualMedia", ActivityResultContracts.PickVisualMedia(), callback).launch(inputType)
 }
 
+fun ComponentActivity.pickVisualMedia(inputType: VisualMediaType, callback: ActivityResultCallback<Uri?>) {
+    PickVisualMediaRequest.Builder().setMediaType(inputType).build().let {
+        register("PickVisualMedia", ActivityResultContracts.PickVisualMedia(), callback).launch(it)
+    }
+}
 
 /**
  * Pick visual media
  *
  * @param inputType [PickVisualMediaRequest]
  */
-fun ComponentActivity.pickMultipleVisualMedia(inputType: PickVisualMediaRequest, callback: ActivityResultCallback<List<@JvmSuppressWildcards Uri>>) {
+fun ComponentActivity.pickMultipleVisualMedia(
+    inputType: PickVisualMediaRequest,
+    callback: ActivityResultCallback<List<@JvmSuppressWildcards Uri>>
+) {
     register("PickMultipleVisualMedia", ActivityResultContracts.PickMultipleVisualMedia(), callback).launch(inputType)
 }
 
+fun ComponentActivity.pickMultipleVisualMedia(inputType: VisualMediaType, callback: ActivityResultCallback<List<@JvmSuppressWildcards Uri>>) {
+    PickVisualMediaRequest.Builder().setMediaType(inputType).build().let {
+        register("PickMultipleVisualMedia", ActivityResultContracts.PickMultipleVisualMedia(), callback).launch(it)
+    }
+}
 
 //endregion
 
@@ -241,14 +241,14 @@ fun <I, O> Fragment.register(
     contract: ActivityResultContract<I, O>,
     callback: ActivityResultCallback<O>
 ): ActivityResultLauncher<I>? {
-    return getActivityResultRegistry()?.register(key, contract, callback).also {
-        lifecycle.addObserver(object : LifecycleEventObserver {
-            override fun onStateChanged(source: LifecycleOwner, event: Event) {
+    return getActivityResultRegistry()?.register(key, contract, callback)?.also {
+        lifecycle.addObserver(
+            LifecycleEventObserver { _, event ->
                 if (event == Event.ON_DESTROY) {
-                    it?.unregister()
+                    it.unregister()
                 }
             }
-        })
+        )
     }
 }
 
@@ -260,22 +260,26 @@ fun Fragment.startActivityResultLauncher(
 }
 
 fun Fragment.startRequestPermissionsLauncher(
-    key: String = "startRequestMultiplePermissions" + mNextLocalRequestCode.getAndIncrement(),
     callback: ActivityResultCallback<Map<String, Boolean>>
 ): ActivityResultLauncher<Array<String>>? {
-    return register(key, ActivityResultContracts.RequestMultiplePermissions(), callback)
+    return register(
+        "startRequestMultiplePermissions" + mNextLocalRequestCode.getAndIncrement(),
+        ActivityResultContracts.RequestMultiplePermissions(),
+        callback
+    )
 }
 
 fun Fragment.startRequestPermissionLauncher(
-    key: String = "startRequestPermission" + mNextLocalRequestCode.getAndIncrement(),
     callback: ActivityResultCallback<Boolean>
 ): ActivityResultLauncher<String>? {
-    return register(key, ActivityResultContracts.RequestPermission(), callback)
+    return register(
+        "startRequestPermission" + mNextLocalRequestCode.getAndIncrement(),
+        ActivityResultContracts.RequestPermission(),
+        callback
+    )
 }
 
-
 fun Fragment.startRequestPermissions(
-    key: String = "startRequestMultiplePermissions" + mNextLocalRequestCode.getAndIncrement(),
     permissions: Array<String>,
     callback: ActivityResultCallback<Map<String, Boolean>>
 ) {
@@ -283,12 +287,10 @@ fun Fragment.startRequestPermissions(
         callback.onActivityResult(permissions.associateWith { true })
         return
     }
-    startRequestPermissionsLauncher(key, callback)?.launch(permissions)
+    startRequestPermissionsLauncher(callback)?.launch(permissions)
 }
 
-
 fun Fragment.startRequestPermission(
-    key: String = "startRequestPermission" + mNextLocalRequestCode.getAndIncrement(),
     permission: String,
     callback: ActivityResultCallback<Boolean>
 ) {
@@ -296,9 +298,8 @@ fun Fragment.startRequestPermission(
         callback.onActivityResult(true)
         return
     }
-    startRequestPermissionLauncher(key, callback)?.launch(permission)
+    startRequestPermissionLauncher(callback)?.launch(permission)
 }
-
 
 /**
  * startActivityResult
@@ -332,7 +333,6 @@ fun Fragment.searchFile(type: Array<String>, callback: ActivityResultCallback<Ur
     register("OpenDocument", ActivityResultContracts.OpenDocument(), callback)?.launch(type)
 }
 
-
 fun Fragment.selectFileByDir(dir: Uri?, callback: ActivityResultCallback<Uri?>) {
     register("OpenDocumentTree", ActivityResultContracts.OpenDocumentTree(), callback)?.launch(dir)
 }
@@ -340,10 +340,9 @@ fun Fragment.selectFileByDir(dir: Uri?, callback: ActivityResultCallback<Uri?>) 
 /**
  * 创建文件
  */
-fun Fragment.createFile(fileName: String,fileType:String ="*/*", callback: ActivityResultCallback<Uri?>) {
+fun Fragment.createFile(fileName: String, fileType: String = "*/*", callback: ActivityResultCallback<Uri?>) {
     register("CreateDocument", ActivityResultContracts.CreateDocument(fileType), callback)?.launch(fileName)
 }
-
 
 /**
  * 拍照
@@ -373,14 +372,12 @@ fun Fragment.takeVideo(callback: ActivityResultCallback<Uri?>) {
     }?.launch(pathUri)
 }
 
-
 /**
  * 选择练习人
  */
 fun Fragment.pickContact(callback: ActivityResultCallback<Uri?>) {
     register("pickContact", ActivityResultContracts.PickContact(), callback)?.launch(null)
 }
-
 
 /**
  * Pick visual media
@@ -391,30 +388,16 @@ fun Fragment.pickVisualMedia(inputType: PickVisualMediaRequest, callback: Activi
     register("PickVisualMedia", ActivityResultContracts.PickVisualMedia(), callback)?.launch(inputType)
 }
 
-
 /**
  * Pick visual media
  *
  * @param inputType [PickVisualMediaRequest]
  */
-fun Fragment.pickMultipleVisualMedia(inputType: PickVisualMediaRequest, callback: ActivityResultCallback<List<@JvmSuppressWildcards Uri>>) {
+fun Fragment.pickMultipleVisualMedia(
+    inputType: PickVisualMediaRequest,
+    callback: ActivityResultCallback<List<@JvmSuppressWildcards Uri>>
+) {
     register("PickMultipleVisualMedia", ActivityResultContracts.PickMultipleVisualMedia(), callback)?.launch(inputType)
 }
 
 //endregion
-
-/***************************************************Context 部分*******************************************************/
-
-fun <I, O> Any.register(
-    key: String,
-    contract: ActivityResultContract<I, O>,
-    callback: ActivityResultCallback<O>
-): ActivityResultLauncher<I>? {
-    return when (this) {
-        is ComponentActivity -> this.register(key, contract, callback)
-        is Fragment -> this.register(key, contract, callback)
-        else -> null
-    }
-}
-
-
